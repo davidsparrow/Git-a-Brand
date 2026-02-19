@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: #09090B;
+  color: #FAFAFA;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #09090B; }
+::-webkit-scrollbar-thumb { background: #3F3F46; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #52525B; }
+
+/* ---- Animations ---- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in-up  { animation: fadeInUp 0.45s ease-out forwards; }
+.animate-fade-in     { animation: fadeIn   0.35s ease-out forwards; }
+.animate-scale-in    { animation: scaleIn  0.3s  ease-out forwards; }
+
+.stagger-1 { animation-delay: 0.05s; opacity: 0; animation-fill-mode: forwards; }
+.stagger-2 { animation-delay: 0.12s; opacity: 0; animation-fill-mode: forwards; }
+.stagger-3 { animation-delay: 0.18s; opacity: 0; animation-fill-mode: forwards; }
+.stagger-4 { animation-delay: 0.24s; opacity: 0; animation-fill-mode: forwards; }
+.stagger-5 { animation-delay: 0.30s; opacity: 0; animation-fill-mode: forwards; }
+.stagger-6 { animation-delay: 0.36s; opacity: 0; animation-fill-mode: forwards; }
+.stagger-7 { animation-delay: 0.42s; opacity: 0; animation-fill-mode: forwards; }
+.stagger-8 { animation-delay: 0.48s; opacity: 0; animation-fill-mode: forwards; }
+
+/* ---- Card hover ---- */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card-hover:hover {
+  transform: scale(1.02);
+  border-color: rgba(167, 139, 250, 0.45) !important;
+  box-shadow: 0 0 0 1px rgba(167,139,250,0.15), 0 16px 40px rgba(0,0,0,0.5);
+}
+
+/* ---- Button press ---- */
+.btn-press { transition: transform 0.1s ease; }
+.btn-press:active { transform: scale(0.96); }
+
+/* ---- Glass ---- */
+.glass {
+  background: rgba(24, 24, 27, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ---- Gradient border (archetype card) ---- */
+.gradient-border { position: relative; }
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, rgba(167,139,250,0.55), transparent 55%, rgba(167,139,250,0.18));
+  z-index: 0;
+  pointer-events: none;
+}
+.gradient-border > * { position: relative; z-index: 1; }
+
+/* ---- Masonry layout ---- */
+.masonry-grid { columns: 4; column-gap: 14px; }
+@media (max-width: 1400px) { .masonry-grid { columns: 3; } }
+@media (max-width: 1000px) { .masonry-grid { columns: 2; } }
+
+.masonry-item { break-inside: avoid; margin-bottom: 14px; }
+
+/* ---- Inspiration card overlay ---- */
+.insp-card .overlay { opacity: 0; transition: opacity 0.2s ease; }
+.insp-card:hover .overlay { opacity: 1; }
+.insp-card .img-wrap img { transition: transform 0.3s ease; }
+.insp-card:hover .img-wrap img { transform: scale(1.04); }
+
+/* ---- Active tag chip ---- */
+.tag-active {
+  background: rgba(167,139,250,0.18);
+  border-color: rgba(167,139,250,0.5);
+  color: #C4B5FD;
+}
+
+/* ---- Input focus ---- */
+input:focus, textarea:focus { outline: none; }
+
+.page-enter { animation: fadeInUp 0.4s ease-out; }

@@ -1,0 +1,235 @@
+import { useState, useRef } from 'react';
+import { X, Link2, Upload, Check, Plus } from 'lucide-react';
+import { useUIStore, useSwipeStore } from '../../store';
+import type { Inspiration } from '../../data/inspirations';
+
+const STAGES = [
+  { label: 'Fetching page...',             ms: 600  },
+  { label: 'Extracting visual elements...', ms: 600  },
+  { label: 'Analyzing patterns...',         ms: 700  },
+];
+
+const MOCK = {
+  imageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80',
+  analysis: {
+    dominantColors: [
+      { hex: '#09090B', name: 'Void Black',   percentage: 60 },
+      { hex: '#A78BFA', name: 'Soft Violet',  percentage: 25 },
+      { hex: '#FAFAFA', name: 'Near White',   percentage: 15 },
+    ],
+    mood: ['focused', 'premium', 'minimal'],
+    visualWeight: 'heavy' as const,
+    typographyStyle: 'geometric sans-serif',
+    layoutPattern: 'hero with feature sections',
+  },
+};
+
+export function SaveModal() {
+  const close          = useUIStore((s) => s.setSaveModalOpen);
+  const addInspiration = useSwipeStore((s) => s.addInspiration);
+
+  const [tab,          setTab]          = useState<'url' | 'upload'>('url');
+  const [url,          setUrl]          = useState('');
+  const [phase,        setPhase]        = useState<'idle' | 'loading' | 'result'>('idle');
+  const [stageIdx,     setStageIdx]     = useState(0);
+  const [tags,         setTags]         = useState<string[]>(['minimal', 'dark-ui']);
+  const [newTag,       setNewTag]       = useState('');
+  const [notes,        setNotes]        = useState('');
+  const [saved,        setSaved]        = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  async function analyze() {
+    setPhase('loading');
+    for (let i = 0; i < STAGES.length; i++) {
+      setStageIdx(i);
+      await new Promise((r) => setTimeout(r, STAGES[i].ms));
+    }
+    setPhase('result');
+  }
+
+  function handleSave() {
+    let domain = 'example.com';
+    try { domain = new URL(url.startsWith('http') ? url : `https://${url}`).hostname; } catch {}
+    const item: Inspiration = {
+      id: Date.now().toString(),
+      title: url ? `Saved from ${domain}` : 'Uploaded Image',
+      sourceUrl: url || '#',
+      sourceDomain: domain,
+      sourceType: tab === 'upload' ? 'upload' : 'website',
+      imageUrl: MOCK.imageUrl,
+      tags,
+      savedAt: new Date().toISOString(),
+      notes,
+      analysis: MOCK.analysis,
+    };
+    addInspiration(item);
+    setSaved(true);
+    setTimeout(() => close(false), 700);
+  }
+
+  function addTag() {
+    const t = newTag.trim().toLowerCase().replace(/\s+/g, '-');
+    if (t && !tags.includes(t)) setTags([...tags, t]);
+    setNewTag('');
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => close(false)} />
+      <div className="relative bg-[#18181B] border border-[#3F3F46] rounded-2xl w-full max-w-lg animate-scale-in shadow-2xl overflow-hidden">
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[#3F3F46]">
+          <h2 className="font-semibold text-[#FAFAFA]">Save Inspiration</h2>
+          <button onClick={() => close(false)} className="text-[#71717A] hover:text-[#FAFAFA] transition-colors">
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Idle */}
+        {phase === 'idle' && (
+          <div className="p-6 space-y-5">
+            <div className="flex gap-1 bg-[#27272A] rounded-lg p-1">
+              {(['url', 'upload'] as const).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTab(t)}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-sm font-medium transition-all ${
+                    tab === t ? 'bg-[#18181B] text-[#FAFAFA] shadow-sm' : 'text-[#71717A] hover:text-[#A1A1AA]'
+                  }`}
+                >
+                  {t === 'url' ? <Link2 size={14} /> : <Upload size={14} />}
+                  {t === 'url' ? 'Paste URL' : 'Upload Image'}
+                </button>
+              ))}
+            </div>
+
+            {tab === 'url' ? (
+              <div>
+                <label className="text-xs text-[#A1A1AA] font-medium mb-2 block">URL</label>
+                <input
+                  autoFocus
+                  type="url"
+                  placeholder="https://linear.app"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && analyze()}
+                  className="w-full bg-[#09090B] border border-[#3F3F46] rounded-lg px-4 py-2.5 text-sm text-[#FAFAFA] placeholder-[#52525B] focus:border-[#A78BFA]/60 transition-colors"
+                />
+              </div>
+            ) : (
+              <div
+                onClick={() => fileRef.current?.click()}
+                className="border-2 border-dashed border-[#3F3F46] rounded-xl p-10 text-center cursor-pointer hover:border-[#A78BFA]/40 transition-colors group"
+              >
+                <Upload size={24} className="mx-auto text-[#52525B] group-hover:text-[#A78BFA] transition-colors mb-3" />
+                <p className="text-sm text-[#71717A]">Drop image or <span className="text-[#A78BFA]">browse</span></p>
+                <p className="text-xs text-[#52525B] mt-1">PNG, JPG, WebP up to 10MB</p>
+                <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={analyze} />
+              </div>
+            )}
+
+            <button
+              onClick={analyze}
+              disabled={tab === 'url' && !url.trim()}
+              className="w-full py-2.5 rounded-lg bg-[#A78BFA] text-[#09090B] font-semibold text-sm hover:bg-[#C4B5FD] transition-colors btn-press disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Analyze
+            </button>
+          </div>
+        )}
+
+        {/* Loading */}
+        {phase === 'loading' && (
+          <div className="p-10 flex flex-col items-center gap-6">
+            <div className="w-11 h-11 rounded-full border-2 border-[#3F3F46] border-t-[#A78BFA] animate-spin" />
+            <div className="space-y-2 text-center">
+              {STAGES.map((s, i) => (
+                <p
+                  key={i}
+                  className={`text-sm transition-all ${
+                    i === stageIdx ? 'text-[#FAFAFA]' :
+                    i < stageIdx  ? 'text-[#3F3F46] line-through' :
+                    'text-[#3F3F46]'
+                  }`}
+                >
+                  {s.label}
+                </p>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Result */}
+        {phase === 'result' && (
+          <div className="p-6 space-y-4">
+            <div className="flex gap-4 p-3 bg-[#27272A] rounded-xl">
+              <img src={MOCK.imageUrl} alt="Preview" className="w-20 h-14 rounded-lg object-cover shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-[#FAFAFA] truncate">
+                  {url ? `Inspiration from ${url.split('/')[2] || url}` : 'Uploaded Image'}
+                </p>
+                <div className="flex gap-1.5 mt-2">
+                  {MOCK.analysis.dominantColors.map((c) => (
+                    <div key={c.hex} title={`${c.name} ${c.hex}`} className="w-5 h-5 rounded border border-[#3F3F46]" style={{ background: c.hex }} />
+                  ))}
+                </div>
+                <div className="flex gap-1 mt-1.5 flex-wrap">
+                  {MOCK.analysis.mood.map((m) => (
+                    <span key={m} className="text-[10px] text-[#71717A] bg-[#3F3F46] px-1.5 py-0.5 rounded">{m}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-xs text-[#A1A1AA] font-medium mb-2 block">Tags</label>
+              <div className="flex flex-wrap gap-1.5 mb-2">
+                {tags.map((t) => (
+                  <span
+                    key={t}
+                    onClick={() => setTags(tags.filter((x) => x !== t))}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#27272A] text-[#A1A1AA] text-xs cursor-pointer hover:bg-[#3F3F46] transition-colors"
+                  >
+                    {t} <X size={9} />
+                  </span>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Add tag..."
+                  value={newTag}
+                  onChange={(e) => setNewTag(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && addTag()}
+                  className="flex-1 bg-[#09090B] border border-[#3F3F46] rounded-lg px-3 py-1.5 text-xs text-[#FAFAFA] placeholder-[#52525B] focus:border-[#A78BFA]/60 transition-colors"
+                />
+                <button onClick={addTag} className="px-2.5 py-1.5 rounded-lg bg-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors">
+                  <Plus size={13} />
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-xs text-[#A1A1AA] font-medium mb-2 block">Notes</label>
+              <textarea
+                placeholder="What caught your eye?"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                rows={2}
+                className="w-full bg-[#09090B] border border-[#3F3F46] rounded-lg px-3 py-2 text-xs text-[#FAFAFA] placeholder-[#52525B] focus:border-[#A78BFA]/60 transition-colors resize-none"
+              />
+            </div>
+
+            <button
+              onClick={handleSave}
+              className="w-full py-2.5 rounded-lg bg-[#A78BFA] text-[#09090B] font-semibold text-sm hover:bg-[#C4B5FD] transition-all btn-press flex items-center justify-center gap-2"
+            >
+              {saved ? <><Check size={15} /> Saved!</> : 'Save to Swipe File'}
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
