@@ -1,17 +1,21 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ExternalLink, Plus, X } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Plus, X, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useSwipeStore } from '../store';
 
 export function InspirationDetail() {
-  const { id }         = useParams();
-  const navigate       = useNavigate();
-  const inspirations   = useSwipeStore((s) => s.inspirations);
-  const item           = inspirations.find((i) => i.id === id);
+  const { id }          = useParams();
+  const navigate        = useNavigate();
+  const inspirations    = useSwipeStore((s) => s.inspirations);
+  const updateNotes     = useSwipeStore((s) => s.updateNotes);
+  const updateTags      = useSwipeStore((s) => s.updateTags);
+  const removeInspiration = useSwipeStore((s) => s.removeInspiration);
+  const item            = inspirations.find((i) => i.id === id);
 
   const [notes,    setNotes]    = useState(item?.notes ?? '');
   const [newTag,   setNewTag]   = useState('');
   const [tags,     setTags]     = useState(item?.tags ?? []);
+  const [saving,   setSaving]   = useState(false);
 
   if (!item) {
     return (
@@ -28,31 +32,60 @@ export function InspirationDetail() {
     .filter((i) => i.id !== item.id && i.tags.some((t) => tags.includes(t)))
     .slice(0, 6);
 
-  function addTag() {
+  const itemId = item.id;
+
+  async function addTag() {
     const t = newTag.trim().toLowerCase().replace(/\s+/g, '-');
-    if (t && !tags.includes(t)) setTags([...tags, t]);
+    if (t && !tags.includes(t)) {
+      const next = [...tags, t];
+      setTags(next);
+      await updateTags(itemId, next);
+    }
     setNewTag('');
+  }
+
+  async function removeTag(tag: string) {
+    const next = tags.filter((x) => x !== tag);
+    setTags(next);
+    await updateTags(itemId, next);
+  }
+
+  async function saveNotes() {
+    setSaving(true);
+    await updateNotes(itemId, notes);
+    setSaving(false);
+  }
+
+  async function handleDelete() {
+    await removeInspiration(itemId);
+    navigate('/swipe-file');
   }
 
   return (
     <div className="p-8 page-enter max-w-7xl">
-      <button
-        onClick={() => navigate('/swipe-file')}
-        className="flex items-center gap-2 text-sm text-[#71717A] hover:text-[#FAFAFA] mb-6 group transition-colors animate-fade-in-up stagger-1"
-      >
-        <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform" />
-        Back to Swipe File
-      </button>
+      <div className="flex items-center justify-between mb-6 animate-fade-in-up stagger-1">
+        <button
+          onClick={() => navigate('/swipe-file')}
+          className="flex items-center gap-2 text-sm text-[#71717A] hover:text-[#FAFAFA] group transition-colors"
+        >
+          <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform" />
+          Back to Swipe File
+        </button>
+        <button
+          onClick={handleDelete}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-[#71717A] hover:text-[#EF4444] border border-[#3F3F46] hover:border-[#EF4444]/40 transition-colors"
+        >
+          <Trash2 size={12} /> Delete
+        </button>
+      </div>
 
       <div className="grid grid-cols-5 gap-8 animate-fade-in-up stagger-2">
-        {/* Image */}
         <div className="col-span-3">
           <div className="rounded-2xl overflow-hidden border border-[#3F3F46] bg-[#18181B]">
             <img src={item.imageUrl} alt={item.title} className="w-full object-cover" />
           </div>
         </div>
 
-        {/* Meta */}
         <div className="col-span-2 space-y-6">
           <div>
             <h1 className="text-xl font-bold text-[#FAFAFA] leading-tight mb-2">{item.title}</h1>
@@ -69,26 +102,26 @@ export function InspirationDetail() {
             </p>
           </div>
 
-          {/* Notes */}
           <div>
             <label className="text-xs font-semibold text-[#A1A1AA] uppercase tracking-wider mb-2 block">Notes</label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
+              onBlur={saveNotes}
               rows={3}
               placeholder="What caught your eye?"
               className="w-full bg-[#09090B] border border-[#3F3F46] rounded-xl px-4 py-3 text-sm text-[#FAFAFA] placeholder-[#52525B] focus:border-[#A78BFA]/60 transition-colors resize-none"
             />
+            {saving && <p className="text-[10px] text-[#52525B] mt-1">Saving...</p>}
           </div>
 
-          {/* Tags */}
           <div>
             <label className="text-xs font-semibold text-[#A1A1AA] uppercase tracking-wider mb-2 block">Tags</label>
             <div className="flex flex-wrap gap-1.5 mb-2">
               {tags.map((t) => (
                 <span
                   key={t}
-                  onClick={() => setTags(tags.filter((x) => x !== t))}
+                  onClick={() => removeTag(t)}
                   className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#27272A] text-[#A1A1AA] text-xs cursor-pointer hover:bg-[#3F3F46] transition-colors"
                 >
                   {t} <X size={9} />
@@ -110,7 +143,6 @@ export function InspirationDetail() {
             </div>
           </div>
 
-          {/* Colors */}
           <div>
             <label className="text-xs font-semibold text-[#A1A1AA] uppercase tracking-wider mb-3 block">Extracted Colors</label>
             <div className="space-y-2">
@@ -139,7 +171,6 @@ export function InspirationDetail() {
             </div>
           </div>
 
-          {/* Mood */}
           <div>
             <label className="text-xs font-semibold text-[#A1A1AA] uppercase tracking-wider mb-2 block">Mood</label>
             <div className="flex flex-wrap gap-1.5">
@@ -149,7 +180,6 @@ export function InspirationDetail() {
             </div>
           </div>
 
-          {/* Typography & Layout */}
           <div className="space-y-3">
             <div>
               <label className="text-xs font-semibold text-[#A1A1AA] uppercase tracking-wider mb-1 block">Typography</label>
@@ -173,7 +203,6 @@ export function InspirationDetail() {
         </div>
       </div>
 
-      {/* Related */}
       {related.length > 0 && (
         <div className="mt-12 animate-fade-in-up stagger-4">
           <h2 className="text-base font-semibold text-[#FAFAFA] mb-4">Related Inspiration</h2>

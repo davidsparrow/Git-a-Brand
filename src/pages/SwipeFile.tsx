@@ -80,6 +80,7 @@ function ListCard({ item }: { item: Inspiration }) {
 
 export function SwipeFile() {
   const inspirations  = useSwipeStore((s) => s.inspirations);
+  const loading       = useSwipeStore((s) => s.loading);
   const selectedTags  = useSwipeStore((s) => s.selectedTags);
   const searchQuery   = useSwipeStore((s) => s.searchQuery);
   const sortBy        = useSwipeStore((s) => s.sortBy);
@@ -164,7 +165,19 @@ export function SwipeFile() {
       </div>
 
       {/* Content */}
-      {filtered.length === 0 ? (
+      {loading ? (
+        <div className="grid grid-cols-4 gap-4 animate-pulse">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="bg-[#18181B] border border-[#3F3F46] rounded-xl overflow-hidden">
+              <div className="h-40 bg-[#27272A]" />
+              <div className="p-3 space-y-2">
+                <div className="h-2.5 bg-[#27272A] rounded w-3/4" />
+                <div className="h-2 bg-[#27272A] rounded w-1/2" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : filtered.length === 0 ? (
         <div className="text-center py-20">
           <p className="text-[#52525B] text-sm">No items match your filters</p>
           <button onClick={clearTags} className="mt-3 text-xs text-[#A78BFA] hover:text-[#C4B5FD] transition-colors">
