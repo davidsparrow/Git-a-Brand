@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Layers, Sparkles, Package, ChevronLeft, ChevronRight, Plus, RotateCcw, Zap } from 'lucide-react';
-import { useUIStore, useSwipeStore } from '../../store';
+import { LayoutDashboard, Layers, Sparkles, Package, ChevronLeft, ChevronRight, Plus, Zap } from 'lucide-react';
+import { useUIStore } from '../../store';
 
 const NAV = [
   { to: '/',          icon: LayoutDashboard, label: 'Dashboard'  },
@@ -13,7 +13,6 @@ export function Sidebar() {
   const collapsed      = useUIStore((s) => s.sidebarCollapsed);
   const setCollapsed   = useUIStore((s) => s.setSidebarCollapsed);
   const setSaveModal   = useUIStore((s) => s.setSaveModalOpen);
-  const resetDemo      = useSwipeStore((s) => s.resetDemo);
   const navigate       = useNavigate();
 
   return (
@@ -83,15 +82,6 @@ export function Sidebar() {
 
       {/* Footer */}
       <div className="border-t border-[#3F3F46] p-3 space-y-1.5">
-        {!collapsed && (
-          <button
-            onClick={() => { resetDemo(); navigate('/'); }}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-[#52525B] hover:text-[#A1A1AA] hover:bg-[#1F1F22] transition-colors"
-          >
-            <RotateCcw size={13} />
-            Reset Demo
-          </button>
-        )}
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs text-[#52525B] hover:text-[#A1A1AA] hover:bg-[#1F1F22] transition-colors"

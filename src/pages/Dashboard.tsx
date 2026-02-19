@@ -7,6 +7,7 @@ import { BRAND_DNA } from '../data/brandDNA';
 export function Dashboard() {
   const navigate      = useNavigate();
   const inspirations  = useSwipeStore((s) => s.inspirations);
+  const loading       = useSwipeStore((s) => s.loading);
   const setSaveModal  = useUIStore((s) => s.setSaveModalOpen);
   const recent        = inspirations.slice(0, 8);
   const allTags       = new Set(inspirations.flatMap((i) => i.tags));
@@ -55,7 +56,15 @@ export function Dashboard() {
           </button>
         </div>
         <div className="flex gap-3 overflow-x-auto pb-1">
-          {recent.map((item, i) => (
+          {loading ? Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="shrink-0 w-44 bg-[#18181B] border border-[#3F3F46] rounded-xl overflow-hidden animate-pulse">
+              <div className="h-24 bg-[#27272A]" />
+              <div className="p-3 space-y-2">
+                <div className="h-2.5 bg-[#27272A] rounded w-3/4" />
+                <div className="h-2 bg-[#27272A] rounded w-1/2" />
+              </div>
+            </div>
+          )) : recent.map((item, i) => (
             <div
               key={item.id}
               onClick={() => navigate(`/swipe-file/${item.id}`)}

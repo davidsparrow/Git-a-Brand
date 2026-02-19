@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AppLayout } from './components/layout/AppLayout';
 import { Dashboard } from './pages/Dashboard';
@@ -5,8 +6,15 @@ import { SwipeFile } from './pages/SwipeFile';
 import { InspirationDetail } from './pages/InspirationDetail';
 import { BrandDNA } from './pages/BrandDNA';
 import { BrandKit } from './pages/BrandKit';
+import { useSwipeStore } from './store';
 
 export default function App() {
+  const fetchInspirations = useSwipeStore((s) => s.fetchInspirations);
+
+  useEffect(() => {
+    fetchInspirations();
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
