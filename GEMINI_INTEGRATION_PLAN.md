@@ -96,20 +96,297 @@ Gemini analyzes text content from:
 
 ---
 
-### Method 3: Manual Upload (Current Flow - Enhanced)
+### Method 3: Manual Upload (Current Flow - Enhanced with Smart Targeting)
 
-**User Flow:**
-1. User uploads image (screenshot, design, inspiration)
-2. Gemini analyzes image
-3. System stores structured data
-4. DNA updates progressively
+**NEW: Smart Multi-Target System**
 
-**What Gemini Extracts:**
-- Color palette (3-5 dominant colors)
-- Visual mood keywords
-- Typography style
-- Layout patterns
-- Design aesthetic
+When users save content (images, URLs, text), they can now specify WHERE this content should be used in the brand system. This prevents Gemini from guessing and ensures updates happen to the right places.
+
+**The Problem Without Targeting:**
+- User uploads a LinkedIn post screenshot
+- System doesn't know if it's for:
+  - Brand DNA (general brand identity)?
+  - Content Voice Guidelines (specifically for LinkedIn)?
+  - Just the Swipe File (reference only)?
+- Result: Gemini either guesses wrong OR updates everything unnecessarily
+
+**The Solution: Target Checkboxes**
+
+When saving ANY content (Save Modal), user sees checkboxes:
+
+```
+┌─ Where should this be used? ─────────────────────┐
+│                                                   │
+│ ☑ Brand DNA (updates overall brand identity)     │
+│ ☐ Content Voice - LinkedIn                       │
+│ ☐ Content Voice - Twitter/X                      │
+│ ☐ Content Voice - Instagram                      │
+│ ☐ Content Voice - Blog                           │
+│ ☐ Content Voice - Email                          │
+│ ☐ Content Voice - Ads                            │
+│ ☐ Swipe File Only (reference, no analysis)       │
+│                                                   │
+│ [Select All] [Clear All]                         │
+└───────────────────────────────────────────────────┘
+```
+
+**Smart Defaults Based on Content Type:**
+
+1. **If URL is detected as social media:**
+   - LinkedIn URL → Auto-check "Content Voice - LinkedIn"
+   - Twitter URL → Auto-check "Content Voice - Twitter/X"
+   - Instagram URL → Auto-check "Content Voice - Instagram"
+   - Generic website → Auto-check "Brand DNA"
+
+2. **If manually uploaded image:**
+   - Auto-check "Brand DNA" (assume it's visual identity)
+   - User can change
+
+3. **If text pasted:**
+   - Show platform dropdown first
+   - Then auto-check relevant content voice checkbox
+
+**User Can Select Multiple:**
+- User saves a blog post → Checks both "Brand DNA" AND "Content Voice - Blog"
+- User saves LinkedIn post → Checks "Content Voice - LinkedIn" only
+- User saves website screenshot → Checks "Brand DNA", "Content Voice - All" (select all)
+
+**Database Schema Update:**
+
+```sql
+-- Add to inspirations table (existing)
+ALTER TABLE inspirations
+ADD COLUMN IF NOT EXISTS target_areas TEXT[] DEFAULT ARRAY['brand_dna'];
+
+-- Possible values in array:
+-- 'brand_dna'
+-- 'content_voice_linkedin'
+-- 'content_voice_twitter'
+-- 'content_voice_instagram'
+-- 'content_voice_blog'
+-- 'content_voice_email_newsletter'
+-- 'content_voice_email_promotional'
+-- 'content_voice_facebook_ads'
+-- 'content_voice_google_ads'
+-- 'content_voice_tiktok'
+-- 'content_voice_youtube'
+-- 'swipe_file_only'
+
+-- Create index for querying by target area
+CREATE INDEX IF NOT EXISTS idx_inspirations_target_areas
+  ON inspirations USING GIN (target_areas);
+```
+
+**How This Changes Analysis Flow:**
+
+**Before (Guessing):**
+```typescript
+// Edge function: analyze-inspiration
+// Problem: Gemini has to guess what to update
+const prompt = `Analyze this content and update brand DNA`;
+// Result: Everything gets updated, even if user just wanted content sample
+```
+
+**After (Targeted):**
+```typescript
+// Edge function: analyze-inspiration (enhanced)
+const { target_areas } = request.body;
+
+if (target_areas.includes('brand_dna')) {
+  // Extract visual identity: colors, fonts, mood
+  const visualAnalysis = await gemini.analyzeVisualIdentity(content);
+  await updateBrandDNA(visualAnalysis);
+}
+
+if (target_areas.includes('content_voice_linkedin')) {
+  // Extract voice patterns specifically for LinkedIn
+  const voiceAnalysis = await gemini.analyzeContentVoice(content, 'linkedin');
+  await updateContentSample('linkedin', voiceAnalysis);
+}
+
+if (target_areas.includes('swipe_file_only')) {
+  // Skip analysis, just save for reference
+  await saveToSwipeFileOnly(content);
+}
+```
+
+**UI Changes to SaveModal.tsx:**
+
+Add new section between "Tags" and "Notes":
+
+```tsx
+{/* Target Selection */}
+<div>
+  <label className="text-xs text-[#A1A1AA] font-medium mb-2 block">
+    Where should this be used?
+  </label>
+
+  <div className="space-y-2 max-h-48 overflow-y-auto">
+    {TARGET_OPTIONS.map((option) => (
+      <label key={option.value} className="flex items-start gap-2 cursor-pointer group">
+        <input
+          type="checkbox"
+          checked={targetAreas.includes(option.value)}
+          onChange={(e) => handleTargetToggle(option.value, e.target.checked)}
+          className="mt-0.5 w-4 h-4 rounded border-[#3F3F46] bg-[#09090B] text-[#A78BFA] focus:ring-[#A78BFA]/40"
+        />
+        <div className="flex-1">
+          <p className="text-sm text-[#FAFAFA] group-hover:text-[#A78BFA] transition-colors">
+            {option.label}
+          </p>
+          {option.description && (
+            <p className="text-xs text-[#71717A] mt-0.5">{option.description}</p>
+          )}
+        </div>
+      </label>
+    ))}
+  </div>
+
+  <div className="flex gap-2 mt-2">
+    <button
+      onClick={selectAllTargets}
+      className="text-xs text-[#A78BFA] hover:text-[#C4B5FD] transition-colors"
+    >
+      Select All
+    </button>
+    <button
+      onClick={clearAllTargets}
+      className="text-xs text-[#71717A] hover:text-[#A1A1AA] transition-colors"
+    >
+      Clear All
+    </button>
+  </div>
+</div>
+```
+
+**Target Options Array:**
+
+```typescript
+const TARGET_OPTIONS = [
+  {
+    value: 'brand_dna',
+    label: 'Brand DNA',
+    description: 'Updates overall brand identity (colors, fonts, mood)',
+  },
+  {
+    value: 'content_voice_blog',
+    label: 'Content Voice - Blog Posts',
+    description: 'Improves blog writing guidelines',
+  },
+  {
+    value: 'content_voice_linkedin',
+    label: 'Content Voice - LinkedIn',
+    description: 'Improves LinkedIn content guidelines',
+  },
+  {
+    value: 'content_voice_twitter',
+    label: 'Content Voice - Twitter/X',
+    description: 'Improves Twitter content guidelines',
+  },
+  {
+    value: 'content_voice_instagram',
+    label: 'Content Voice - Instagram',
+    description: 'Improves Instagram content guidelines',
+  },
+  {
+    value: 'content_voice_tiktok',
+    label: 'Content Voice - TikTok/Reels',
+    description: 'Improves TikTok/Reels guidelines',
+  },
+  {
+    value: 'content_voice_youtube',
+    label: 'Content Voice - YouTube',
+    description: 'Improves YouTube guidelines',
+  },
+  {
+    value: 'content_voice_email_newsletter',
+    label: 'Content Voice - Email Newsletters',
+    description: 'Improves newsletter guidelines',
+  },
+  {
+    value: 'content_voice_email_promotional',
+    label: 'Content Voice - Promotional Emails',
+    description: 'Improves promotional email guidelines',
+  },
+  {
+    value: 'content_voice_facebook_ads',
+    label: 'Content Voice - Facebook/IG Ads',
+    description: 'Improves social ad guidelines',
+  },
+  {
+    value: 'content_voice_google_ads',
+    label: 'Content Voice - Google Search Ads',
+    description: 'Improves search ad guidelines',
+  },
+  {
+    value: 'swipe_file_only',
+    label: 'Swipe File Only',
+    description: 'Save as reference, do not analyze',
+  },
+];
+```
+
+**Benefits of This Approach:**
+
+1. **Precision:** User controls exactly what gets updated
+2. **No guessing:** Gemini doesn't waste tokens analyzing wrong things
+3. **Flexibility:** Can apply one piece of content to multiple areas
+4. **Performance:** Skip analysis entirely for "Swipe File Only"
+5. **User clarity:** Clear understanding of how their content is used
+6. **Better guidelines:** Content voice samples are platform-specific
+7. **Cost savings:** Only analyze what's needed
+
+**Example Scenarios:**
+
+**Scenario 1: User saves a LinkedIn post they wrote**
+- Checks: "Content Voice - LinkedIn" only
+- Result: Post is analyzed for voice patterns, stored as LinkedIn sample, used when generating LinkedIn guidelines
+- Brand DNA: Not affected
+
+**Scenario 2: User saves company website homepage**
+- Checks: "Brand DNA" (default auto-selected)
+- Result: Colors, fonts, layout analyzed and aggregated into Brand DNA
+- Content Voice: Not affected
+
+**Scenario 3: User saves competitor's blog post**
+- Checks: "Content Voice - Blog" AND "Swipe File Only"
+- Result: Voice analysis for blog guidelines, but also saved for reference
+- Can see it in swipe file later for inspiration
+
+**Scenario 4: User saves beautiful landing page**
+- Checks: "Brand DNA", "Content Voice - All" (select all button)
+- Result: Everything gets analyzed - visual identity AND voice patterns for all platforms
+- Most comprehensive update
+
+**Scenario 5: User saves random cool design**
+- Checks: "Swipe File Only"
+- Result: Saved immediately, no analysis, no tokens spent
+- Pure reference library
+
+### Method 3 Continued: Manual Upload Enhancement
+
+**Enhanced User Flow with Smart Targeting:**
+
+1. User clicks "+ Save New" button
+2. Choose input method: URL, Upload Image, or Paste Text
+3. System auto-detects content type and pre-selects smart defaults:
+   - LinkedIn URL → "Content Voice - LinkedIn" checked
+   - Image upload → "Brand DNA" checked
+   - Generic website → "Brand DNA" checked
+4. User reviews/adjusts target checkboxes (can select multiple)
+5. User adds tags and notes
+6. Click "Save & Analyze"
+7. System analyzes content based ONLY on selected targets
+8. Updates relevant areas:
+   - Brand DNA table (if checked)
+   - Content samples table (if any content voice checked)
+   - Inspirations table (always, with target_areas metadata)
+9. Confirmation: "Saved! Updated: Brand DNA, Content Voice - LinkedIn"
+
+**What Gemini Extracts (based on target areas):**
+- **If "Brand DNA" selected:** Color palette, visual mood, typography style, layout patterns, design aesthetic
+- **If "Content Voice - [Platform]" selected:** Text content, tone, vocabulary, sentence structure, formatting patterns
+- **If "Swipe File Only" selected:** No analysis, just save for reference
 
 ---
 
@@ -1063,6 +1340,21 @@ Before publishing, ensure your content:
 
 Before generating the Master Content Voice Guidelines, users can optionally provide sample content for each platform to improve accuracy and personalization. This creates a feedback loop where Gemini learns from actual brand content.
 
+**INTEGRATION WITH SAVE MODAL:**
+
+The Smart Multi-Target System (described in Method 3) is the PRIMARY way users collect content samples. When users click "+ Save New":
+
+1. They can save content via URL, Upload, or Paste
+2. They select target checkboxes including "Content Voice - [Platform]"
+3. System automatically creates content sample entries
+4. Samples are linked to the inspiration in `target_areas` column
+
+This means content sample collection is NOT a separate workflow - it's built into the existing "+ Save New" flow with target checkboxes.
+
+**Additional Dedicated Sample Collection (Optional Enhancement):**
+
+For users who want to add content samples WITHOUT creating swipe file entries, you could add a dedicated "Add Content Sample" flow on the Brand Kit page:
+
 **Sample Collection Methods:**
 
 1. **URL Input** - Paste URLs to existing content:
@@ -1082,6 +1374,8 @@ Before generating the Master Content Voice Guidelines, users can optionally prov
 3. **Batch Import** - Upload multiple samples at once:
    - CSV file with platform + content columns
    - Text file with delimited samples
+
+**NOTE:** The Smart Multi-Target System in the Save Modal already handles methods 1 and 2. Batch import would be a unique addition for power users.
 
 **UI Flow:**
 
@@ -1298,17 +1592,34 @@ ADD COLUMN IF NOT EXISTS guideline_type TEXT CHECK (guideline_type IN ('design',
 
 **Updated Task List for Phase 7:**
 
-1. Create `content_samples` table with RLS policies
-2. Create edge function: `analyze-content-sample`
-3. Create edge function: `generate-content-guidelines` (enhanced with samples)
-4. Build "Content Samples" UI section on Brand Kit page
-5. Build "Add Sample" modal with URL/text/file options
-6. Implement URL fetching for content extraction
-7. Build sample management interface (view/edit/delete)
-8. Add "Generate Content Guidelines" flow
-9. Implement preview modal for generated guidelines
-10. Add download functionality (PDF, Markdown, HTML)
-11. Add regeneration logic when samples or DNA updates
+**Part A: Smart Multi-Target System (Foundation)**
+1. Add `target_areas` column to `inspirations` table (TEXT[] array)
+2. Update SaveModal.tsx with target checkboxes UI
+3. Add smart default logic (auto-detect URL type, pre-select targets)
+4. Update edge function: `analyze-inspiration` to handle targeted analysis
+5. Add conditional analysis: only analyze based on selected targets
+6. Update store to track target areas per inspiration
+
+**Part B: Content Sample Collection Integration**
+7. Create `content_samples` table with RLS policies (or use target_areas in inspirations)
+8. When user selects "Content Voice - [Platform]", create/update content sample entry
+9. Link inspiration to content sample via target_areas
+10. Build "Content Samples" summary view on Brand Kit page (shows count per platform)
+
+**Part C: Content Guidelines Generation**
+11. Create edge function: `analyze-content-sample` (if not using targeted analysis from Part A)
+12. Create edge function: `generate-content-guidelines` (enhanced with samples)
+13. Aggregate all content samples per platform
+14. Generate guidelines using both Brand DNA + platform-specific samples
+15. Add "Generate Content Guidelines" button on Brand Kit page
+16. Implement preview modal for generated guidelines
+17. Add download functionality (PDF, Markdown, HTML)
+18. Add regeneration logic when samples or DNA updates
+
+**Optional Enhancement:**
+19. Add dedicated "Add Content Sample" modal (separate from Save Modal)
+20. Add batch CSV import for power users
+21. Add sample management interface (view/edit/delete individual samples)
 
 **Is This Helpful?**
 YES! This is extremely valuable because:
@@ -1347,7 +1658,7 @@ YES! This is extremely valuable because:
    - Blog section adapts general brand voice (no samples provided)
 7. User downloads guide → Shares with team → Everyone writes on-brand
 
-**Estimated Time:** 6-8 hours (increased due to content sample collection system)
+**Estimated Time:** 8-10 hours (increased due to Smart Multi-Target System + content sample collection integration)
 
 ---
 
@@ -1359,9 +1670,9 @@ YES! This is extremely valuable because:
 - **Phase 4:** 4-5 hours
 - **Phase 5:** 3-4 hours (DNA aggregation)
 - **Phase 6:** 4-5 hours (LLM-ready brand guidelines - 5 export formats)
-- **Phase 7:** 6-8 hours (Master content voice guidelines with platform-specific sections + content sample collection system)
+- **Phase 7:** 8-10 hours (Master content voice guidelines + Smart Multi-Target System + content sample collection)
 
-**Total:** 24-34 hours of development
+**Total:** 26-36 hours of development
 
 **Recommended Order:**
 1. Phase 1 (must have - foundation for everything)
