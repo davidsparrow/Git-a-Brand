@@ -12,6 +12,42 @@ export interface InspirationAnalysis {
   layoutPattern: string;
 }
 
+export type TargetArea =
+  | 'brand_dna'
+  | 'content_voice_blog'
+  | 'content_voice_linkedin'
+  | 'content_voice_twitter'
+  | 'content_voice_instagram'
+  | 'content_voice_tiktok'
+  | 'content_voice_youtube'
+  | 'content_voice_email_newsletter'
+  | 'content_voice_email_promotional'
+  | 'content_voice_facebook_ads'
+  | 'content_voice_google_ads'
+  | 'swipe_file_only';
+
+export interface TargetOption {
+  value: TargetArea;
+  label: string;
+  description: string;
+  group: 'brand' | 'voice' | 'reference';
+}
+
+export const TARGET_OPTIONS: TargetOption[] = [
+  { value: 'brand_dna',                      label: 'Brand DNA',                    description: 'Updates visual identity — colors, fonts, mood',      group: 'brand'     },
+  { value: 'content_voice_blog',             label: 'Blog Posts',                   description: 'Improves long-form writing guidelines',              group: 'voice'     },
+  { value: 'content_voice_linkedin',         label: 'LinkedIn',                     description: 'Improves LinkedIn content guidelines',               group: 'voice'     },
+  { value: 'content_voice_twitter',          label: 'Twitter / X',                  description: 'Improves Twitter/X content guidelines',              group: 'voice'     },
+  { value: 'content_voice_instagram',        label: 'Instagram',                    description: 'Improves Instagram content guidelines',              group: 'voice'     },
+  { value: 'content_voice_tiktok',           label: 'TikTok / Reels',               description: 'Improves short-video content guidelines',            group: 'voice'     },
+  { value: 'content_voice_youtube',          label: 'YouTube',                      description: 'Improves YouTube content guidelines',                group: 'voice'     },
+  { value: 'content_voice_email_newsletter', label: 'Email — Newsletter',           description: 'Improves newsletter writing guidelines',             group: 'voice'     },
+  { value: 'content_voice_email_promotional',label: 'Email — Promotional',          description: 'Improves promotional email guidelines',              group: 'voice'     },
+  { value: 'content_voice_facebook_ads',     label: 'Facebook / IG Ads',            description: 'Improves paid social ad guidelines',                 group: 'voice'     },
+  { value: 'content_voice_google_ads',       label: 'Google Search Ads',            description: 'Improves search ad copy guidelines',                 group: 'voice'     },
+  { value: 'swipe_file_only',                label: 'Swipe File Only',              description: 'Save for reference — no analysis performed',         group: 'reference' },
+];
+
 export interface Inspiration {
   id: string;
   title: string;
@@ -23,6 +59,7 @@ export interface Inspiration {
   savedAt: string;
   notes?: string;
   analysis: InspirationAnalysis;
+  targetAreas: TargetArea[];
 }
 
 export const DUMMY_INSPIRATIONS: Inspiration[] = [
@@ -47,6 +84,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'geometric sans-serif',
       layoutPattern: 'centered hero with feature grid',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '2',
@@ -69,6 +107,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'geometric sans-serif',
       layoutPattern: 'sidebar navigation with content grid',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '3',
@@ -90,6 +129,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'humanist sans-serif',
       layoutPattern: 'hero with diagonal sections',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '4',
@@ -112,6 +152,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'display serif with geometric contrast',
       layoutPattern: 'poster layout with dominant headline',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '5',
@@ -133,6 +174,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'grotesque sans-serif',
       layoutPattern: 'strict grid with typographic hierarchy',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '6',
@@ -154,6 +196,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'geometric monospace + sans',
       layoutPattern: 'multi-column dashboard with charts',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '7',
@@ -176,6 +219,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'elegant serif with restrained sans',
       layoutPattern: 'centered editorial with breathing room',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '8',
@@ -197,6 +241,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'variable weight geometric',
       layoutPattern: 'full-bleed hero with interactive demo',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '9',
@@ -218,6 +263,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'humanist sans with serif accents',
       layoutPattern: 'document-style centered content',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '10',
@@ -239,6 +285,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'compact geometric sans',
       layoutPattern: 'tool-style layout with panels',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '11',
@@ -261,6 +308,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'serif with monospaced details',
       layoutPattern: 'full-bleed photography with minimal text',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '12',
@@ -282,6 +330,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'editorial serif with geometric sans',
       layoutPattern: 'asymmetric editorial with strong columns',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '13',
@@ -304,6 +353,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'minimal',
       layoutPattern: 'perspective photography',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '14',
@@ -325,6 +375,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'geometric bold with light body',
       layoutPattern: 'hero CTA with social proof',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '15',
@@ -346,6 +397,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'industrial grotesque',
       layoutPattern: 'brand showcase with whitespace',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '16',
@@ -367,6 +419,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'modern sans light weight',
       layoutPattern: 'layered glassmorphic cards',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '17',
@@ -389,6 +442,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'transitional serif all-caps',
       layoutPattern: 'editorial product grid with whitespace',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '18',
@@ -410,6 +464,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'system monospace with sans UI',
       layoutPattern: 'profile grid with activity heatmap',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '19',
@@ -431,6 +486,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'friendly rounded sans',
       layoutPattern: 'card grid with upvote mechanic',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '20',
@@ -453,6 +509,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'minimal high contrast',
       layoutPattern: 'asymmetric balance with negative space',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '21',
@@ -474,6 +531,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'oversized grotesque, raw',
       layoutPattern: 'broken grid, overlapping',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '22',
@@ -495,6 +553,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'kinetic display type',
       layoutPattern: 'full-frame motion composition',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '23',
@@ -516,6 +575,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'geometric sans, light weight',
       layoutPattern: 'masonry grid with hover interactions',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '24',
@@ -537,6 +597,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'geometric sans for labels',
       layoutPattern: 'ordered grid system',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '25',
@@ -558,6 +619,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'display condensed with light body',
       layoutPattern: 'full-bleed case study layout',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '26',
@@ -580,6 +642,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'monospace code with sans UI',
       layoutPattern: 'sidebar TOC with wide content',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '27',
@@ -601,6 +664,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'minimal or none',
       layoutPattern: 'abstract composition',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '28',
@@ -622,6 +686,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'rounded humanist sans',
       layoutPattern: 'step-by-step wizard flow',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '29',
@@ -644,6 +709,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'refined serif with metallic treatment',
       layoutPattern: 'centered logo with minimal composition',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '30',
@@ -665,6 +731,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'geometric sans, medium contrast',
       layoutPattern: 'bento grid feature layout',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '31',
@@ -687,6 +754,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'none dominant',
       layoutPattern: 'color field composition',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '32',
@@ -709,6 +777,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'monospace as primary element',
       layoutPattern: 'terminal-inspired layout',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '33',
@@ -730,6 +799,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'minimal callouts',
       layoutPattern: 'centered product on white',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '34',
@@ -751,6 +821,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'humanist sans-serif, professional',
       layoutPattern: 'grid-based system across materials',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '35',
@@ -773,6 +844,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'tabular numeric + compact sans',
       layoutPattern: 'full-bleed dark canvas with glowing elements',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '36',
@@ -795,6 +867,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'display serif, high contrast weight',
       layoutPattern: 'type-dominant with grid',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '37',
@@ -816,6 +889,7 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'large display with readable body',
       layoutPattern: 'above-fold hero with CTA',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
   {
     id: '38',
@@ -837,5 +911,6 @@ export const DUMMY_INSPIRATIONS: Inspiration[] = [
       typographyStyle: 'compact geometric sans',
       layoutPattern: 'sidebar navigation study',
     },
+    targetAreas: ['brand_dna'] as TargetArea[],
   },
 ];

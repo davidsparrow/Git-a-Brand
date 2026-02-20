@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react';
-import { X, Link2, Upload, Check, Plus } from 'lucide-react';
+import { X, Link2, Upload, Check, Plus, Target } from 'lucide-react';
 import { useUIStore, useSwipeStore } from '../../store';
-import type { Inspiration } from '../../data/inspirations';
+import type { Inspiration, TargetArea } from '../../data/inspirations';
+import { TARGET_OPTIONS } from '../../data/inspirations';
 
 const STAGES = [
   { label: 'Fetching page...',             ms: 600  },
@@ -24,6 +25,30 @@ const MOCK = {
   },
 };
 
+const SOCIAL_PATTERNS: { pattern: RegExp; targets: TargetArea[] }[] = [
+  { pattern: /linkedin\.com/i,  targets: ['content_voice_linkedin']         },
+  { pattern: /twitter\.com|x\.com/i, targets: ['content_voice_twitter']     },
+  { pattern: /instagram\.com/i, targets: ['content_voice_instagram']        },
+  { pattern: /tiktok\.com/i,    targets: ['content_voice_tiktok']           },
+  { pattern: /youtube\.com|youtu\.be/i, targets: ['content_voice_youtube']  },
+  { pattern: /medium\.com/i,    targets: ['content_voice_blog']             },
+];
+
+function detectDefaults(url: string, tab: 'url' | 'upload'): TargetArea[] {
+  if (tab === 'upload') return ['brand_dna'];
+  if (!url.trim()) return ['brand_dna'];
+  for (const { pattern, targets } of SOCIAL_PATTERNS) {
+    if (pattern.test(url)) return targets;
+  }
+  return ['brand_dna'];
+}
+
+const GROUP_LABELS: Record<string, string> = {
+  brand: 'Brand',
+  voice: 'Content Voice — by Platform',
+  reference: 'Reference',
+};
+
 export function SaveModal() {
   const close          = useUIStore((s) => s.setSaveModalOpen);
   const addInspiration = useSwipeStore((s) => s.addInspiration);
@@ -36,15 +61,34 @@ export function SaveModal() {
   const [newTag,       setNewTag]       = useState('');
   const [notes,        setNotes]        = useState('');
   const [saved,        setSaved]        = useState(false);
+  const [targetAreas,  setTargetAreas]  = useState<TargetArea[]>(['brand_dna']);
   const fileRef = useRef<HTMLInputElement>(null);
 
   async function analyze() {
+    const defaults = detectDefaults(url, tab);
+    setTargetAreas(defaults);
     setPhase('loading');
     for (let i = 0; i < STAGES.length; i++) {
       setStageIdx(i);
       await new Promise((r) => setTimeout(r, STAGES[i].ms));
     }
     setPhase('result');
+  }
+
+  function toggleTarget(value: TargetArea, checked: boolean) {
+    if (checked) {
+      setTargetAreas((prev) => [...prev, value]);
+    } else {
+      setTargetAreas((prev) => prev.filter((t) => t !== value));
+    }
+  }
+
+  function selectAll() {
+    setTargetAreas(TARGET_OPTIONS.map((o) => o.value));
+  }
+
+  function clearAll() {
+    setTargetAreas([]);
   }
 
   function handleSave() {
@@ -61,6 +105,7 @@ export function SaveModal() {
       savedAt: new Date().toISOString(),
       notes,
       analysis: MOCK.analysis,
+      targetAreas: targetAreas.length > 0 ? targetAreas : ['brand_dna'],
     };
     addInspiration(item);
     setSaved(true);
@@ -72,6 +117,20 @@ export function SaveModal() {
     if (t && !tags.includes(t)) setTags([...tags, t]);
     setNewTag('');
   }
+
+  const groupedOptions = TARGET_OPTIONS.reduce<Record<string, typeof TARGET_OPTIONS>>((acc, opt) => {
+    if (!acc[opt.group]) acc[opt.group] = [];
+    acc[opt.group].push(opt);
+    return acc;
+  }, {});
+
+  const targetSummary = targetAreas.length === 0
+    ? 'None selected'
+    : targetAreas.length === TARGET_OPTIONS.length
+    ? 'All areas'
+    : targetAreas
+        .map((v) => TARGET_OPTIONS.find((o) => o.value === v)?.label ?? v)
+        .join(', ');
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -162,7 +221,7 @@ export function SaveModal() {
 
         {/* Result */}
         {phase === 'result' && (
-          <div className="p-6 space-y-4">
+          <div className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
             <div className="flex gap-4 p-3 bg-[#27272A] rounded-xl">
               <img src={MOCK.imageUrl} alt="Preview" className="w-20 h-14 rounded-lg object-cover shrink-0" />
               <div className="flex-1 min-w-0">
@@ -182,6 +241,78 @@ export function SaveModal() {
               </div>
             </div>
 
+            {/* Target Areas */}
+            <div className="bg-[#09090B] border border-[#3F3F46] rounded-xl overflow-hidden">
+              <div className="flex items-center gap-2 px-4 py-3 border-b border-[#3F3F46]">
+                <Target size={14} className="text-[#A78BFA]" />
+                <span className="text-xs font-semibold text-[#FAFAFA]">Where should this be used?</span>
+                <div className="ml-auto flex items-center gap-3">
+                  <button
+                    onClick={selectAll}
+                    className="text-[10px] font-medium text-[#A78BFA] hover:text-[#C4B5FD] transition-colors"
+                  >
+                    Select all
+                  </button>
+                  <span className="text-[#3F3F46]">·</span>
+                  <button
+                    onClick={clearAll}
+                    className="text-[10px] font-medium text-[#52525B] hover:text-[#71717A] transition-colors"
+                  >
+                    Clear
+                  </button>
+                </div>
+              </div>
+
+              <div className="divide-y divide-[#27272A]">
+                {(['brand', 'voice', 'reference'] as const).map((group) => (
+                  <div key={group} className="px-4 py-3 space-y-2.5">
+                    <p className="text-[10px] font-semibold text-[#52525B] uppercase tracking-widest">
+                      {GROUP_LABELS[group]}
+                    </p>
+                    {groupedOptions[group]?.map((opt) => {
+                      const checked = targetAreas.includes(opt.value);
+                      return (
+                        <label
+                          key={opt.value}
+                          className="flex items-start gap-3 cursor-pointer group"
+                        >
+                          <div className={`mt-0.5 w-4 h-4 rounded flex items-center justify-center border transition-all shrink-0 ${
+                            checked
+                              ? 'bg-[#A78BFA] border-[#A78BFA]'
+                              : 'bg-transparent border-[#3F3F46] group-hover:border-[#71717A]'
+                          }`}>
+                            {checked && <Check size={10} strokeWidth={3} className="text-[#09090B]" />}
+                          </div>
+                          <input
+                            type="checkbox"
+                            className="sr-only"
+                            checked={checked}
+                            onChange={(e) => toggleTarget(opt.value, e.target.checked)}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <p className={`text-xs font-medium transition-colors ${checked ? 'text-[#FAFAFA]' : 'text-[#A1A1AA] group-hover:text-[#FAFAFA]'}`}>
+                              {opt.label}
+                            </p>
+                            <p className="text-[10px] text-[#52525B] mt-0.5 leading-relaxed">{opt.description}</p>
+                          </div>
+                        </label>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+
+              {targetAreas.length > 0 && (
+                <div className="px-4 py-2.5 bg-[#27272A]/50 border-t border-[#27272A]">
+                  <p className="text-[10px] text-[#71717A] leading-relaxed">
+                    <span className="text-[#A78BFA] font-medium">Gemini will update: </span>
+                    {targetSummary}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Tags */}
             <div>
               <label className="text-xs text-[#A1A1AA] font-medium mb-2 block">Tags</label>
               <div className="flex flex-wrap gap-1.5 mb-2">
@@ -210,6 +341,7 @@ export function SaveModal() {
               </div>
             </div>
 
+            {/* Notes */}
             <div>
               <label className="text-xs text-[#A1A1AA] font-medium mb-2 block">Notes</label>
               <textarea
@@ -223,7 +355,8 @@ export function SaveModal() {
 
             <button
               onClick={handleSave}
-              className="w-full py-2.5 rounded-lg bg-[#A78BFA] text-[#09090B] font-semibold text-sm hover:bg-[#C4B5FD] transition-all btn-press flex items-center justify-center gap-2"
+              disabled={targetAreas.length === 0}
+              className="w-full py-2.5 rounded-lg bg-[#A78BFA] text-[#09090B] font-semibold text-sm hover:bg-[#C4B5FD] transition-all btn-press flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {saved ? <><Check size={15} /> Saved!</> : 'Save to Swipe File'}
             </button>
