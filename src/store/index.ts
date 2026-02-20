@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
-import type { Inspiration } from '../data/inspirations';
+import type { Inspiration, TargetArea } from '../data/inspirations';
 
 interface SwipeState {
   inspirations: Inspiration[];
@@ -14,6 +14,7 @@ interface SwipeState {
   removeInspiration: (id: string) => Promise<void>;
   updateNotes: (id: string, notes: string) => Promise<void>;
   updateTags: (id: string, tags: string[]) => Promise<void>;
+  updateTargetAreas: (id: string, targetAreas: TargetArea[]) => Promise<void>;
   toggleTag: (tag: string) => void;
   clearTags: () => void;
   setSearch: (q: string) => void;
@@ -49,6 +50,7 @@ function rowToInspiration(row: Record<string, unknown>): Inspiration {
     savedAt: row.saved_at as string,
     notes: (row.notes as string) || undefined,
     analysis,
+    targetAreas: ((row.target_areas as TargetArea[]) || ['brand_dna']),
   };
 }
 
@@ -85,6 +87,7 @@ export const useSwipeStore = create<SwipeState>()((set, get) => ({
       saved_at: item.savedAt,
       notes: item.notes || '',
       analysis: item.analysis,
+      target_areas: item.targetAreas,
     });
     if (!error) {
       set((s) => ({ inspirations: [item, ...s.inspirations] }));
@@ -112,6 +115,15 @@ export const useSwipeStore = create<SwipeState>()((set, get) => ({
     if (!error) {
       set((s) => ({
         inspirations: s.inspirations.map((i) => (i.id === id ? { ...i, tags } : i)),
+      }));
+    }
+  },
+
+  updateTargetAreas: async (id, targetAreas) => {
+    const { error } = await supabase.from('inspirations').update({ target_areas: targetAreas }).eq('id', id);
+    if (!error) {
+      set((s) => ({
+        inspirations: s.inspirations.map((i) => (i.id === id ? { ...i, targetAreas } : i)),
       }));
     }
   },
