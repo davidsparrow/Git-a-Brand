@@ -1059,9 +1059,145 @@ Before publishing, ensure your content:
 **Scannable:** Easy to skim (headings, bullets, short paragraphs)
 ```
 
-**Gemini Prompt for Content Guidelines:**
+**User Content Sample Collection Workflow:**
+
+Before generating the Master Content Voice Guidelines, users can optionally provide sample content for each platform to improve accuracy and personalization. This creates a feedback loop where Gemini learns from actual brand content.
+
+**Sample Collection Methods:**
+
+1. **URL Input** - Paste URLs to existing content:
+   - Blog post URLs (e.g., Medium, company blog)
+   - LinkedIn post URLs
+   - Twitter/X post URLs
+   - Instagram post URLs
+   - YouTube video URLs
+   - Email newsletters (forwarded or HTML)
+
+2. **Direct Text Upload** - Copy/paste content:
+   - Email copy
+   - Ad copy
+   - Social media captions
+   - Video scripts
+
+3. **Batch Import** - Upload multiple samples at once:
+   - CSV file with platform + content columns
+   - Text file with delimited samples
+
+**UI Flow:**
+
 ```
-You are a content strategist. Based on the brand voice analysis below, generate a comprehensive Master Brand Content Voice Guidelines document.
+Brand Kit Page → "Content Samples" Section
+
+For each platform:
+[Blog Posts] (2 samples collected) [+ Add Sample]
+[LinkedIn] (0 samples) [+ Add Sample]
+[Twitter/X] (1 sample) [+ Add Sample]
+...
+
+Click "+ Add Sample" →
+  Modal opens:
+  - Option 1: Paste URL (auto-fetch content)
+  - Option 2: Paste text directly
+  - Option 3: Upload file
+  - Platform: [Auto-detected or manual select]
+  - [Save Sample]
+
+Once samples collected:
+[Generate Content Guidelines] button
+  → Gemini analyzes all samples per platform
+  → Generates platform-specific guidelines based on:
+      * General brand DNA
+      * Actual content samples from that platform
+```
+
+**Database Changes:**
+```sql
+CREATE TABLE IF NOT EXISTS content_samples (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id),
+  platform TEXT NOT NULL CHECK (platform IN (
+    'blog', 'linkedin', 'twitter', 'instagram',
+    'tiktok', 'youtube', 'facebook_ads', 'google_ads',
+    'email_newsletter', 'email_promotional'
+  )),
+  content_text TEXT NOT NULL,
+  source_url TEXT,
+  source_type TEXT CHECK (source_type IN ('url', 'upload', 'paste')),
+  analysis_metadata JSONB,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  analyzed_at TIMESTAMPTZ
+);
+
+CREATE INDEX idx_content_samples_user_platform
+  ON content_samples(user_id, platform);
+
+ALTER TABLE content_samples ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own content samples"
+  ON content_samples FOR SELECT
+  TO authenticated
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own content samples"
+  ON content_samples FOR INSERT
+  TO authenticated
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own content samples"
+  ON content_samples FOR DELETE
+  TO authenticated
+  USING (auth.uid() = user_id);
+```
+
+**Edge Function: `analyze-content-sample`**
+
+When user adds a sample (URL or text), this function:
+1. Fetches content if URL provided
+2. Extracts text content
+3. Uses Gemini to analyze:
+   - Tone and voice characteristics
+   - Sentence structure patterns
+   - Vocabulary and word choice
+   - Formatting patterns
+   - Platform-specific elements (hashtags, emojis, CTAs)
+4. Stores analysis in `analysis_metadata` field
+
+**Gemini Prompt for Sample Analysis:**
+```
+You are a content analyst. Analyze this {PLATFORM} content sample and extract voice characteristics.
+
+CONTENT:
+{content_text}
+
+Extract:
+1. Tone (2-3 adjectives): professional, casual, playful, authoritative, etc.
+2. Sentence structure: short/punchy, medium/balanced, long/descriptive
+3. Key vocabulary (5-10 recurring words/phrases)
+4. Formatting patterns: use of line breaks, emojis, hashtags, capitalization
+5. Engagement tactics: questions, calls-to-action, storytelling, data-driven
+6. Platform-specific elements:
+   - For LinkedIn: thought leadership angle, industry terms
+   - For Twitter: brevity, wit, hashtag usage
+   - For Instagram: visual descriptions, emoji density
+   - For Email: personalization, subject line style
+   - For Ads: benefit focus, urgency, social proof
+
+Return JSON:
+{
+  "tone": string[],
+  "sentenceStructure": string,
+  "vocabulary": string[],
+  "formattingPatterns": string[],
+  "engagementTactics": string[],
+  "platformElements": {
+    [key]: string
+  }
+}
+```
+
+**Enhanced Gemini Prompt for Content Guidelines (with samples):**
+```
+You are a content strategist. Based on the brand voice analysis and user-provided content samples, generate a comprehensive Master Brand Content Voice Guidelines document.
 
 INPUT DATA:
 - Brand voice tone: {tone}
@@ -1069,6 +1205,15 @@ INPUT DATA:
 - Sentence structure: {structure}
 - Brand archetype: {archetype}
 - Target audience: {audience if available}
+
+CONTENT SAMPLES ANALYSIS:
+{For each platform where samples exist:}
+- Platform: {platform_name}
+- Sample count: {count}
+- Analyzed tone: {analyzed_tone}
+- Analyzed vocabulary: {analyzed_vocabulary}
+- Analyzed patterns: {analyzed_patterns}
+- Sample excerpts: {2-3 actual excerpts}
 
 OUTPUT: A detailed content creation guide with platform-specific sections for:
 1. Blog posts
@@ -1087,13 +1232,23 @@ For EACH platform, include:
 - Format specifications (length, structure)
 - Tone adaptation (how brand voice adjusts for this platform)
 - Best practices (timing, hashtags, etc.)
-- 2 concrete examples matching the brand voice
+- CONCRETE EXAMPLES drawn from actual user samples (if available) or generated to match analyzed patterns
 - Platform-specific don'ts
+
+IMPORTANT: For platforms WITH content samples:
+- Use actual voice patterns from the samples
+- Quote or reference actual phrases that work well
+- Maintain consistency with observed formatting
+- Generate examples that closely match the sample style
+
+For platforms WITHOUT content samples:
+- Adapt general brand voice to platform best practices
+- Use archetypal examples appropriate for the platform
 
 Also include:
 - Universal brand voice checklist
 - Content creation workflow
-- Examples library (2-3 per major platform)
+- Examples library (prioritize platforms with samples)
 
 Make it immediately actionable. A user should be able to open this document, find their platform, and know exactly how to write on-brand content for it.
 
@@ -1110,10 +1265,50 @@ ADD COLUMN IF NOT EXISTS guideline_type TEXT CHECK (guideline_type IN ('design',
 ```
 
 **UI Components:**
-- Add "Master Content Guide" download button on Brand Kit page
-- Preview modal showing full document
-- "Regenerate" button when brand voice updates
-- Export as PDF or Markdown
+
+1. **Content Samples Section** (Brand Kit page):
+   - Grid/list view showing all 10 platforms
+   - Each platform shows: sample count, last updated
+   - "+ Add Sample" button per platform
+   - View/delete existing samples
+   - "Analyze All Samples" button (bulk analysis)
+
+2. **Add Sample Modal**:
+   - Tab 1: Paste URL (auto-fetch)
+   - Tab 2: Paste text directly
+   - Tab 3: Upload file (.txt, .csv)
+   - Platform dropdown (pre-selected if clicked from specific platform)
+   - Save button
+   - Loading state while analyzing
+
+3. **Sample Management**:
+   - List view of all samples per platform
+   - Edit/delete options
+   - Re-analyze button (if user updates sample)
+   - Visual indicators: "Analyzed" vs "Pending Analysis"
+
+4. **Master Content Guide Generation**:
+   - "Generate Content Guidelines" button (prominent)
+   - Shows preview: "X platforms with samples, Y without"
+   - Generation progress modal
+   - Preview modal showing full document
+   - Download options: PDF, Markdown, HTML
+   - "Regenerate" button when samples or brand voice updates
+   - Version history dropdown
+
+**Updated Task List for Phase 7:**
+
+1. Create `content_samples` table with RLS policies
+2. Create edge function: `analyze-content-sample`
+3. Create edge function: `generate-content-guidelines` (enhanced with samples)
+4. Build "Content Samples" UI section on Brand Kit page
+5. Build "Add Sample" modal with URL/text/file options
+6. Implement URL fetching for content extraction
+7. Build sample management interface (view/edit/delete)
+8. Add "Generate Content Guidelines" flow
+9. Implement preview modal for generated guidelines
+10. Add download functionality (PDF, Markdown, HTML)
+11. Add regeneration logic when samples or DNA updates
 
 **Is This Helpful?**
 YES! This is extremely valuable because:
@@ -1123,14 +1318,36 @@ YES! This is extremely valuable because:
 3. **Reference document:** Users can share this with team members, contractors, or feed it to other LLMs for content generation
 4. **Consistency:** Ensures all content (across all platforms) maintains brand voice
 5. **Educational:** Teaches users platform best practices while maintaining brand identity
+6. **Sample-driven accuracy:** By providing actual content samples, guidelines become hyper-personalized to the user's real voice
 
 **Use Cases:**
 - User writing a blog post → Opens guide → References "Blog Posts" section → Writes on-brand
 - User creating LinkedIn content → References "LinkedIn" section → Matches tone + format
 - User feeding to ChatGPT → Includes relevant section in prompt → Gets on-brand output
 - Agency managing client → Uses as single source of truth for all content creators
+- New team member onboarding → Learns brand voice from real examples + guidelines
 
-**Estimated Time:** 4-5 hours
+**Content Sample Collection Benefits:**
+- **Accuracy:** Gemini learns from YOUR actual voice, not generic templates
+- **Platform nuance:** Captures how you naturally adapt tone per platform
+- **Real examples:** Guidelines include actual phrases/patterns from your content
+- **Continuous improvement:** Add more samples over time to refine guidelines
+- **No guesswork:** Don't have samples for a platform? Guidelines still generated from brand DNA
+
+**Example Workflow:**
+1. User has 5 LinkedIn posts they're proud of → Pastes URLs
+2. User has 3 email newsletters → Copy/pastes text
+3. User has 10 tweets → Pastes URLs or uses batch CSV upload
+4. Clicks "Generate Content Guidelines"
+5. Gemini analyzes all samples + brand DNA
+6. Generates document where:
+   - LinkedIn section uses patterns from actual posts
+   - Email section matches newsletter style
+   - Twitter section reflects tweet voice
+   - Blog section adapts general brand voice (no samples provided)
+7. User downloads guide → Shares with team → Everyone writes on-brand
+
+**Estimated Time:** 6-8 hours (increased due to content sample collection system)
 
 ---
 
@@ -1142,9 +1359,9 @@ YES! This is extremely valuable because:
 - **Phase 4:** 4-5 hours
 - **Phase 5:** 3-4 hours (DNA aggregation)
 - **Phase 6:** 4-5 hours (LLM-ready brand guidelines - 5 export formats)
-- **Phase 7:** 4-5 hours (Master content voice guidelines with platform-specific sections)
+- **Phase 7:** 6-8 hours (Master content voice guidelines with platform-specific sections + content sample collection system)
 
-**Total:** 22-31 hours of development
+**Total:** 24-34 hours of development
 
 **Recommended Order:**
 1. Phase 1 (must have - foundation for everything)
