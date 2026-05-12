@@ -7,18 +7,18 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background-color: #09090B;
-  color: #FAFAFA;
-  font-family: 'Inter', sans-serif;
+  background-color: #050505;
+  color: #FFF8F0;
+  font-family: 'DM Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
 ::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: #09090B; }
-::-webkit-scrollbar-thumb { background: #3F3F46; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #52525B; }
+::-webkit-scrollbar-track { background: #050505; }
+::-webkit-scrollbar-thumb { background: #4A5568; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #6B4226; }
 
 /* ---- Animations ---- */
 @keyframes fadeInUp {
@@ -53,8 +53,8 @@ body {
 }
 .card-hover:hover {
   transform: scale(1.02);
-  border-color: rgba(167, 139, 250, 0.45) !important;
-  box-shadow: 0 0 0 1px rgba(167,139,250,0.15), 0 16px 40px rgba(0,0,0,0.5);
+  border-color: rgba(160, 100, 74, 0.5) !important;
+  box-shadow: 0 0 0 1px rgba(107,66,38,0.22), 0 16px 40px rgba(0,0,0,0.5);
 }
 
 /* ---- Button press ---- */
@@ -63,7 +63,7 @@ body {
 
 /* ---- Glass ---- */
 .glass {
-  background: rgba(24, 24, 27, 0.85);
+  background: rgba(61, 43, 31, 0.82);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
@@ -75,7 +75,7 @@ body {
   position: absolute;
   inset: -1px;
   border-radius: 13px;
-  background: linear-gradient(135deg, rgba(167,139,250,0.55), transparent 55%, rgba(167,139,250,0.18));
+  background: linear-gradient(135deg, rgba(107,66,38,0.72), transparent 55%, rgba(74,85,104,0.42));
   z-index: 0;
   pointer-events: none;
 }
@@ -96,9 +96,9 @@ body {
 
 /* ---- Active tag chip ---- */
 .tag-active {
-  background: rgba(167,139,250,0.18);
-  border-color: rgba(167,139,250,0.5);
-  color: #C4B5FD;
+  background: rgba(107,66,38,0.28);
+  border-color: rgba(160,100,74,0.55);
+  color: #A0644A;
 }
 
 /* ---- Input focus ---- */

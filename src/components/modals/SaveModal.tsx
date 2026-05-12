@@ -21,9 +21,9 @@ const STAGES_URL = [
 
 const FALLBACK_ANALYSIS: InspirationAnalysis = {
   dominantColors: [
-    { hex: '#09090B', name: 'Void Black',  percentage: 60 },
-    { hex: '#A78BFA', name: 'Soft Violet', percentage: 25 },
-    { hex: '#FAFAFA', name: 'Near White',  percentage: 15 },
+    { hex: '#050505', name: 'Void Black',  percentage: 60 },
+    { hex: '#6B4226', name: 'Warm Brown',  percentage: 25 },
+    { hex: '#FFF8F0', name: 'Near White',  percentage: 15 },
   ],
   mood: ['focused', 'premium', 'minimal'],
   visualWeight: 'heavy',
@@ -263,12 +263,12 @@ export function SaveModal() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => close(false)} />
-      <div className="relative bg-[#18181B] border border-[#3F3F46] rounded-2xl w-full max-w-lg animate-scale-in shadow-2xl overflow-hidden">
+      <div className="relative bg-[#3D2B1F] border border-[#4A5568] rounded-2xl w-full max-w-lg animate-scale-in shadow-2xl overflow-hidden">
 
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-[#3F3F46]">
-          <h2 className="font-semibold text-[#FAFAFA]">Save Inspiration</h2>
-          <button onClick={() => close(false)} className="text-[#71717A] hover:text-[#FAFAFA] transition-colors">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[#4A5568]">
+          <h2 className="font-semibold text-[#FFF8F0]">Save Inspiration</h2>
+          <button onClick={() => close(false)} className="text-[#A0644A] hover:text-[#FFF8F0] transition-colors">
             <X size={18} />
           </button>
         </div>
@@ -276,13 +276,13 @@ export function SaveModal() {
         {/* Idle */}
         {phase === 'idle' && (
           <div className="p-6 space-y-5">
-            <div className="flex gap-1 bg-[#27272A] rounded-lg p-1">
+            <div className="flex gap-1 bg-[#4A5568] rounded-lg p-1">
               {(['url', 'upload'] as const).map((t) => (
                 <button
                   key={t}
                   onClick={() => setTab(t)}
                   className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-sm font-medium transition-all ${
-                    tab === t ? 'bg-[#18181B] text-[#FAFAFA] shadow-sm' : 'text-[#71717A] hover:text-[#A1A1AA]'
+                    tab === t ? 'bg-[#3D2B1F] text-[#FFF8F0] shadow-sm' : 'text-[#A0644A] hover:text-[#FFE8D6]'
                   }`}
                 >
                   {t === 'url' ? <Link2 size={14} /> : <Upload size={14} />}
@@ -293,7 +293,7 @@ export function SaveModal() {
 
             {tab === 'url' ? (
               <div>
-                <label className="text-xs text-[#A1A1AA] font-medium mb-2 block">URL</label>
+                <label className="text-xs text-[#FFE8D6] font-medium mb-2 block">URL</label>
                 <input
                   autoFocus
                   type="url"
@@ -301,17 +301,17 @@ export function SaveModal() {
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && analyze()}
-                  className="w-full bg-[#09090B] border border-[#3F3F46] rounded-lg px-4 py-2.5 text-sm text-[#FAFAFA] placeholder-[#52525B] focus:border-[#A78BFA]/60 transition-colors"
+                  className="w-full bg-[#050505] border border-[#4A5568] rounded-lg px-4 py-2.5 text-sm text-[#FFF8F0] placeholder-[#A0644A] focus:border-[#6B4226]/60 transition-colors"
                 />
               </div>
             ) : (
               <div
                 onClick={() => fileRef.current?.click()}
-                className="border-2 border-dashed border-[#3F3F46] rounded-xl p-10 text-center cursor-pointer hover:border-[#A78BFA]/40 transition-colors group"
+                className="border-2 border-dashed border-[#4A5568] rounded-xl p-10 text-center cursor-pointer hover:border-[#6B4226]/40 transition-colors group"
               >
-                <Upload size={24} className="mx-auto text-[#52525B] group-hover:text-[#A78BFA] transition-colors mb-3" />
-                <p className="text-sm text-[#71717A]">Drop image or <span className="text-[#A78BFA]">browse</span></p>
-                <p className="text-xs text-[#52525B] mt-1">PNG, JPG, WebP up to 10MB</p>
+                <Upload size={24} className="mx-auto text-[#A0644A] group-hover:text-[#FFE8D6] transition-colors mb-3" />
+                <p className="text-sm text-[#A0644A]">Drop image or <span className="text-[#FFE8D6]">browse</span></p>
+                <p className="text-xs text-[#A0644A] mt-1">PNG, JPG, WebP up to 10MB</p>
                 <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
               </div>
             )}
@@ -319,7 +319,7 @@ export function SaveModal() {
             <button
               onClick={() => analyze()}
               disabled={tab === 'url' && !url.trim()}
-              className="w-full py-2.5 rounded-lg bg-[#A78BFA] text-[#09090B] font-semibold text-sm hover:bg-[#C4B5FD] transition-colors btn-press disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-full py-2.5 rounded-lg bg-[#6B4226] text-[#FFF8F0] font-semibold text-sm hover:bg-[#A0644A] transition-colors btn-press disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Analyze
             </button>
@@ -329,15 +329,15 @@ export function SaveModal() {
         {/* Loading */}
         {phase === 'loading' && (
           <div className="p-10 flex flex-col items-center gap-6">
-            <div className="w-11 h-11 rounded-full border-2 border-[#3F3F46] border-t-[#A78BFA] animate-spin" />
+            <div className="w-11 h-11 rounded-full border-2 border-[#4A5568] border-t-[#6B4226] animate-spin" />
             <div className="space-y-2 text-center">
               {(selectedFile ? STAGES_IMAGE : STAGES_URL).map((s, i) => (
                 <p
                   key={i}
                   className={`text-sm transition-all ${
-                    i === stageIdx ? 'text-[#FAFAFA]' :
-                    i < stageIdx  ? 'text-[#3F3F46] line-through' :
-                    'text-[#3F3F46]'
+                    i === stageIdx ? 'text-[#FFF8F0]' :
+                    i < stageIdx  ? 'text-[#4A5568] line-through' :
+                    'text-[#4A5568]'
                   }`}
                 >
                   {s.label}
@@ -351,60 +351,60 @@ export function SaveModal() {
         {phase === 'result' && (
           <div className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
             {analysisError && (
-              <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-[#27272A] border border-[#3F3F46]">
-                <AlertCircle size={13} className="text-[#F59E0B] shrink-0" />
-                <p className="text-xs text-[#A1A1AA]">Gemini analysis unavailable — using fallback data. Save will still work.</p>
+              <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-[#4A5568] border border-[#4A5568]">
+                <AlertCircle size={13} className="text-[#F4A832] shrink-0" />
+                <p className="text-xs text-[#FFE8D6]">Gemini analysis unavailable — using fallback data. Save will still work.</p>
               </div>
             )}
 
-            <div className="flex gap-4 p-3 bg-[#27272A] rounded-xl">
+            <div className="flex gap-4 p-3 bg-[#4A5568] rounded-xl">
               <img src={previewImage} alt="Preview" className="w-20 h-14 rounded-lg object-cover shrink-0" />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-[#FAFAFA] truncate">
+                <p className="text-sm font-medium text-[#FFF8F0] truncate">
                   {pageTitle || (url ? `Inspiration from ${detectedDomain || url.split('/')[2] || url}` : (selectedFile?.name ?? 'Uploaded Image'))}
                 </p>
                 <div className="flex gap-1.5 mt-2">
                   {analysisResult.dominantColors.map((c) => (
-                    <div key={c.hex} title={`${c.name} ${c.hex}`} className="w-5 h-5 rounded border border-[#3F3F46]" style={{ background: c.hex }} />
+                    <div key={c.hex} title={`${c.name} ${c.hex}`} className="w-5 h-5 rounded border border-[#4A5568]" style={{ background: c.hex }} />
                   ))}
                 </div>
                 <div className="flex gap-1 mt-1.5 flex-wrap">
                   {analysisResult.mood.map((m) => (
-                    <span key={m} className="text-[10px] text-[#71717A] bg-[#3F3F46] px-1.5 py-0.5 rounded">{m}</span>
+                    <span key={m} className="text-[10px] text-[#A0644A] bg-[#4A5568] px-1.5 py-0.5 rounded">{m}</span>
                   ))}
                 </div>
               </div>
             </div>
 
             {/* Target Areas */}
-            <div className="bg-[#09090B] border border-[#3F3F46] rounded-xl overflow-hidden">
-              <div className="flex items-center gap-2 px-4 py-3 border-b border-[#3F3F46]">
-                <Target size={14} className="text-[#A78BFA]" />
-                <span className="text-xs font-semibold text-[#FAFAFA]">Where should this be used?</span>
+            <div className="bg-[#050505] border border-[#4A5568] rounded-xl overflow-hidden">
+              <div className="flex items-center gap-2 px-4 py-3 border-b border-[#4A5568]">
+                <Target size={14} className="text-[#A0644A]" />
+                <span className="text-xs font-semibold text-[#FFF8F0]">Where should this be used?</span>
                 <div className="ml-auto flex items-center gap-3">
-                  <button onClick={selectAll} className="text-[10px] font-medium text-[#A78BFA] hover:text-[#C4B5FD] transition-colors">Select all</button>
-                  <span className="text-[#3F3F46]">·</span>
-                  <button onClick={clearAll}  className="text-[10px] font-medium text-[#52525B] hover:text-[#71717A] transition-colors">Clear</button>
+                  <button onClick={selectAll} className="text-[10px] font-medium text-[#A0644A] hover:text-[#FFE8D6] transition-colors">Select all</button>
+                  <span className="text-[#4A5568]">·</span>
+                  <button onClick={clearAll}  className="text-[10px] font-medium text-[#A0644A] hover:text-[#FFE8D6] transition-colors">Clear</button>
                 </div>
               </div>
 
-              <div className="divide-y divide-[#27272A]">
+              <div className="divide-y divide-[#4A5568]">
                 {(['brand', 'voice', 'reference'] as const).map((group) => (
                   <div key={group} className="px-4 py-3 space-y-2.5">
-                    <p className="text-[10px] font-semibold text-[#52525B] uppercase tracking-widest">{GROUP_LABELS[group]}</p>
+                    <p className="text-[10px] font-semibold text-[#A0644A] uppercase tracking-widest">{GROUP_LABELS[group]}</p>
                     {groupedOptions[group]?.map((opt) => {
                       const checked = targetAreas.includes(opt.value);
                       return (
                         <label key={opt.value} className="flex items-start gap-3 cursor-pointer group">
                           <div className={`mt-0.5 w-4 h-4 rounded flex items-center justify-center border transition-all shrink-0 ${
-                            checked ? 'bg-[#A78BFA] border-[#A78BFA]' : 'bg-transparent border-[#3F3F46] group-hover:border-[#71717A]'
+                            checked ? 'bg-[#6B4226] border-[#6B4226]' : 'bg-transparent border-[#4A5568] group-hover:border-[#A0644A]'
                           }`}>
-                            {checked && <Check size={10} strokeWidth={3} className="text-[#09090B]" />}
+                            {checked && <Check size={10} strokeWidth={3} className="text-[#FFF8F0]" />}
                           </div>
                           <input type="checkbox" className="sr-only" checked={checked} onChange={(e) => toggleTarget(opt.value, e.target.checked)} />
                           <div className="flex-1 min-w-0">
-                            <p className={`text-xs font-medium transition-colors ${checked ? 'text-[#FAFAFA]' : 'text-[#A1A1AA] group-hover:text-[#FAFAFA]'}`}>{opt.label}</p>
-                            <p className="text-[10px] text-[#52525B] mt-0.5 leading-relaxed">{opt.description}</p>
+                            <p className={`text-xs font-medium transition-colors ${checked ? 'text-[#FFF8F0]' : 'text-[#FFE8D6] group-hover:text-[#FFF8F0]'}`}>{opt.label}</p>
+                            <p className="text-[10px] text-[#A0644A] mt-0.5 leading-relaxed">{opt.description}</p>
                           </div>
                         </label>
                       );
@@ -414,9 +414,9 @@ export function SaveModal() {
               </div>
 
               {targetAreas.length > 0 && (
-                <div className="px-4 py-2.5 bg-[#27272A]/50 border-t border-[#27272A]">
-                  <p className="text-[10px] text-[#71717A] leading-relaxed">
-                    <span className="text-[#A78BFA] font-medium">Gemini will update: </span>
+                <div className="px-4 py-2.5 bg-[#4A5568]/50 border-t border-[#4A5568]">
+                  <p className="text-[10px] text-[#A0644A] leading-relaxed">
+                    <span className="text-[#A0644A] font-medium">Gemini will update: </span>
                     {targetSummary}
                   </p>
                 </div>
@@ -425,10 +425,10 @@ export function SaveModal() {
 
             {/* Tags */}
             <div>
-              <label className="text-xs text-[#A1A1AA] font-medium mb-2 block">Tags</label>
+              <label className="text-xs text-[#FFE8D6] font-medium mb-2 block">Tags</label>
               <div className="flex flex-wrap gap-1.5 mb-2">
                 {tags.map((t) => (
-                  <span key={t} onClick={() => setTags(tags.filter((x) => x !== t))} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#27272A] text-[#A1A1AA] text-xs cursor-pointer hover:bg-[#3F3F46] transition-colors">
+                  <span key={t} onClick={() => setTags(tags.filter((x) => x !== t))} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#4A5568] text-[#FFE8D6] text-xs cursor-pointer hover:bg-[#4A5568] transition-colors">
                     {t} <X size={9} />
                   </span>
                 ))}
@@ -438,9 +438,9 @@ export function SaveModal() {
                   type="text" placeholder="Add tag..." value={newTag}
                   onChange={(e) => setNewTag(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && addTag()}
-                  className="flex-1 bg-[#09090B] border border-[#3F3F46] rounded-lg px-3 py-1.5 text-xs text-[#FAFAFA] placeholder-[#52525B] focus:border-[#A78BFA]/60 transition-colors"
+                  className="flex-1 bg-[#050505] border border-[#4A5568] rounded-lg px-3 py-1.5 text-xs text-[#FFF8F0] placeholder-[#A0644A] focus:border-[#6B4226]/60 transition-colors"
                 />
-                <button onClick={addTag} className="px-2.5 py-1.5 rounded-lg bg-[#27272A] text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors">
+                <button onClick={addTag} className="px-2.5 py-1.5 rounded-lg bg-[#4A5568] text-[#FFE8D6] hover:text-[#FFF8F0] transition-colors">
                   <Plus size={13} />
                 </button>
               </div>
@@ -448,19 +448,19 @@ export function SaveModal() {
 
             {/* Notes */}
             <div>
-              <label className="text-xs text-[#A1A1AA] font-medium mb-2 block">Notes</label>
+              <label className="text-xs text-[#FFE8D6] font-medium mb-2 block">Notes</label>
               <textarea
                 placeholder="What caught your eye?" value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={2}
-                className="w-full bg-[#09090B] border border-[#3F3F46] rounded-lg px-3 py-2 text-xs text-[#FAFAFA] placeholder-[#52525B] focus:border-[#A78BFA]/60 transition-colors resize-none"
+                className="w-full bg-[#050505] border border-[#4A5568] rounded-lg px-3 py-2 text-xs text-[#FFF8F0] placeholder-[#A0644A] focus:border-[#6B4226]/60 transition-colors resize-none"
               />
             </div>
 
             <button
               onClick={handleSave}
               disabled={targetAreas.length === 0}
-              className="w-full py-2.5 rounded-lg bg-[#A78BFA] text-[#09090B] font-semibold text-sm hover:bg-[#C4B5FD] transition-all btn-press flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-full py-2.5 rounded-lg bg-[#6B4226] text-[#FFF8F0] font-semibold text-sm hover:bg-[#A0644A] transition-all btn-press flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {saved ? <><Check size={15} /> Saved!</> : 'Save to Swipe File'}
             </button>

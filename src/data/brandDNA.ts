@@ -13,24 +13,24 @@ export const BRAND_DNA = {
   },
   palette: {
     primary: [
-      { hex: '#09090B', name: 'Void Black',   percentage: 72, role: 'Primary Background' },
-      { hex: '#18181B', name: 'Deep Zinc',    percentage: 61, role: 'Surface' },
-      { hex: '#A78BFA', name: 'Soft Violet',  percentage: 54, role: 'Creative Accent' },
-      { hex: '#FAFAFA', name: 'Near White',   percentage: 48, role: 'Primary Text' },
+      { hex: '#050505', name: 'Void Black',   percentage: 72, role: 'Primary Background' },
+      { hex: '#3D2B1F', name: 'FiveUp Brown',    percentage: 61, role: 'Surface' },
+      { hex: '#6B4226', name: 'Warm Brown',  percentage: 54, role: 'Creative Accent' },
+      { hex: '#FFF8F0', name: 'Near White',   percentage: 48, role: 'Primary Text' },
       { hex: '#0A2540', name: 'Navy Depth',   percentage: 43, role: 'Deep Anchor' },
     ],
     accent: [
-      { hex: '#34D399', name: 'Emerald Glow',  percentage: 38, role: 'Success / Energy' },
-      { hex: '#5E6AD2', name: 'Linear Blue',   percentage: 35, role: 'Technical Accent' },
-      { hex: '#FB923C', name: 'Warm Signal',   percentage: 22, role: 'Alert / Warmth' },
+      { hex: '#38A169', name: 'Emerald Glow',  percentage: 38, role: 'Success / Energy' },
+      { hex: '#4A5568', name: 'Slate Anchor',   percentage: 35, role: 'Technical Accent' },
+      { hex: '#F4A832', name: 'Warm Signal',   percentage: 22, role: 'Alert / Warmth' },
     ],
     neutral: [
-      { hex: '#3F3F46', name: 'Border Gray',  percentage: 65, role: 'Borders' },
-      { hex: '#A1A1AA', name: 'Zinc Muted',   percentage: 58, role: 'Secondary Text' },
-      { hex: '#27272A', name: 'Elevated',     percentage: 52, role: 'Elevated Surface' },
+      { hex: '#4A5568', name: 'Slate Border',  percentage: 65, role: 'Borders' },
+      { hex: '#FFE8D6', name: 'Warm Cream',   percentage: 58, role: 'Secondary Text' },
+      { hex: '#4A5568', name: 'FiveUp Slate',     percentage: 52, role: 'Elevated Surface' },
     ],
     harmonyDescription:
-      "Your palette gravitates toward deep, cool tones with strategic warm accents. The dominant midnight blacks and zinc surfaces create authority and focus, while violet accents add creative energy and signal craft. The warm neutrals prevent coldness, making the aesthetic feel intentional rather than sterile.",
+      "Your palette gravitates toward deep, warm tones with structured slate accents. The solid black base and FiveUp brown surfaces create authority and focus, while the warm brown interactive accents add craft without breaking the restrained dark theme.",
   },
   typography: {
     primaryStyle:   { name: 'Geometric Sans-Serif', confidence: 84 },
@@ -38,10 +38,10 @@ export const BRAND_DNA = {
     preferredWeights: ['Medium (500)', 'Bold (700)', 'Semibold (600)'],
     sizeContrast: 'High',
     recommendedFonts: [
-      { name: 'Inter',           category: 'Geometric Sans', reason: 'Matches your preference for geometric clarity with warmth',              specimen: 'Aa Bb Cc 0123' },
+      { name: 'DM Sans',           category: 'Geometric Sans', reason: 'Matches your preference for geometric clarity with warmth',              specimen: 'Aa Bb Cc 0123' },
       { name: 'JetBrains Mono',  category: 'Monospace',      reason: 'Technical precision signal, strong in developer-focused aesthetics',     specimen: 'const x = 42;' },
       { name: 'Fraunces',        category: 'Display Serif',  reason: 'Provides editorial contrast against the geometric sans',                 specimen: 'The Craft' },
-      { name: 'Geist',           category: 'Geometric Sans', reason: 'Modern engineering aesthetic, pairs beautifully with Inter',             specimen: 'Build fast.' },
+      { name: 'Geist',           category: 'Geometric Sans', reason: 'Modern engineering aesthetic, pairs cleanly with DM Sans',               specimen: 'Build fast.' },
     ],
   },
   visualTone: [
@@ -59,5 +59,5 @@ export const BRAND_DNA = {
   contrast:   'High',
   whitespace: 'Generous',
   summary:
-    "Your visual language speaks to technical sophistication with intentional warmth. You don't choose between beautiful and functional — you demand both. The dark interfaces aren't about being different; they're about focus. The violet accents aren't decorative; they're directional. Your aesthetic tells a story of someone who takes craft seriously.",
+    "Your visual language speaks to technical sophistication with intentional warmth. You don't choose between beautiful and functional — you demand both. The dark interfaces aren't about being different; they're about focus. The brown and slate accents aren't decorative; they're directional. Your aesthetic tells a story of someone who takes craft seriously.",
 };

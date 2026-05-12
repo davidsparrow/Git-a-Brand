@@ -113,8 +113,8 @@ export function BrandKit() {
   return (
     <div className="p-8 page-enter">
       <div className="mb-8 animate-fade-in-up stagger-1">
-        <h1 className="text-2xl font-bold text-[#FAFAFA] tracking-tight">Brand Kit</h1>
-        <p className="text-sm text-[#71717A] mt-1">Your portable design identity</p>
+        <h1 className="text-2xl font-bold text-[#FFF8F0] tracking-tight">Brand Kit</h1>
+        <p className="text-sm text-[#A0644A] mt-1">Your portable design identity</p>
       </div>
 
       <div className="grid grid-cols-3 gap-8">
@@ -122,82 +122,82 @@ export function BrandKit() {
         <div className="col-span-2 space-y-6 animate-fade-in-up stagger-2">
 
           {/* Colors */}
-          <section className="bg-[#18181B] border border-[#3F3F46] rounded-2xl p-6">
-            <h2 className="text-base font-semibold text-[#FAFAFA] mb-5">Colors</h2>
+          <section className="bg-[#3D2B1F] border border-[#4A5568] rounded-2xl p-6">
+            <h2 className="text-base font-semibold text-[#FFF8F0] mb-5">Colors</h2>
             <div className="space-y-1.5">
               {kit.colors.map((c) => (
-                <div key={c.hex} className="flex items-center gap-4 px-3 py-2.5 rounded-xl hover:bg-[#27272A]/50 transition-colors">
+                <div key={c.hex} className="flex items-center gap-4 px-3 py-2.5 rounded-xl hover:bg-[#4A5568]/50 transition-colors">
                   <div
-                    className="w-10 h-10 rounded-lg border border-[#3F3F46] shrink-0 flex items-center justify-center font-mono text-[10px] font-bold"
+                    className="w-10 h-10 rounded-lg border border-[#4A5568] shrink-0 flex items-center justify-center font-mono text-[10px] font-bold"
                     style={{ background: c.hex, color: c.textColor }}
                   >
                     {c.hex.slice(1, 4)}
                   </div>
                   <div className="w-32 shrink-0">
-                    <p className="text-xs font-semibold text-[#FAFAFA]">{c.role}</p>
-                    <p className="text-[10px] text-[#71717A]">{c.name}</p>
+                    <p className="text-xs font-semibold text-[#FFF8F0]">{c.role}</p>
+                    <p className="text-[10px] text-[#A0644A]">{c.name}</p>
                   </div>
-                  <p className="font-mono text-xs text-[#52525B]">{c.hex}</p>
-                  <p className="text-xs text-[#71717A] ml-auto text-right max-w-[180px] leading-snug">{c.usage}</p>
+                  <p className="font-mono text-xs text-[#A0644A]">{c.hex}</p>
+                  <p className="text-xs text-[#A0644A] ml-auto text-right max-w-[180px] leading-snug">{c.usage}</p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* Typography */}
-          <section className="bg-[#18181B] border border-[#3F3F46] rounded-2xl p-6">
-            <h2 className="text-base font-semibold text-[#FAFAFA] mb-5">Typography</h2>
+          <section className="bg-[#3D2B1F] border border-[#4A5568] rounded-2xl p-6">
+            <h2 className="text-base font-semibold text-[#FFF8F0] mb-5">Typography</h2>
             <div className="space-y-4">
-              <div className="bg-[#27272A] rounded-xl p-5">
-                <p className="text-xs text-[#71717A] mb-2 uppercase tracking-wider">Heading — Inter Bold</p>
-                <p className="text-2xl font-bold text-[#FAFAFA]">{kit.typography.heading.sample}</p>
+              <div className="bg-[#4A5568] rounded-xl p-5">
+                <p className="text-xs text-[#A0644A] mb-2 uppercase tracking-wider">Heading — DM Sans Bold</p>
+                <p className="text-2xl font-bold text-[#FFF8F0]">{kit.typography.heading.sample}</p>
               </div>
-              <div className="bg-[#27272A] rounded-xl p-5">
-                <p className="text-xs text-[#71717A] mb-2 uppercase tracking-wider">Body — Inter Regular</p>
-                <p className="text-sm text-[#A1A1AA] leading-relaxed">{kit.typography.body.sample}</p>
+              <div className="bg-[#4A5568] rounded-xl p-5">
+                <p className="text-xs text-[#A0644A] mb-2 uppercase tracking-wider">Body — DM Sans Regular</p>
+                <p className="text-sm text-[#FFE8D6] leading-relaxed">{kit.typography.body.sample}</p>
               </div>
-              <div className="bg-[#27272A] rounded-xl p-5">
-                <p className="text-xs text-[#71717A] mb-2 uppercase tracking-wider">Mono — JetBrains Mono</p>
-                <p className="font-mono text-sm text-[#34D399]">{kit.typography.mono.sample}</p>
+              <div className="bg-[#4A5568] rounded-xl p-5">
+                <p className="text-xs text-[#A0644A] mb-2 uppercase tracking-wider">Mono — JetBrains Mono</p>
+                <p className="font-mono text-sm text-[#38A169]">{kit.typography.mono.sample}</p>
               </div>
-              <div className="bg-[#27272A] rounded-xl p-4 flex items-center justify-between">
-                <span className="text-xs text-[#71717A]">Type Scale</span>
-                <span className="text-sm font-semibold text-[#FAFAFA]">{kit.typography.scale}</span>
+              <div className="bg-[#4A5568] rounded-xl p-4 flex items-center justify-between">
+                <span className="text-xs text-[#A0644A]">Type Scale</span>
+                <span className="text-sm font-semibold text-[#FFF8F0]">{kit.typography.scale}</span>
               </div>
             </div>
           </section>
 
           {/* Voice */}
-          <section className="bg-[#18181B] border border-[#3F3F46] rounded-2xl p-6">
-            <h2 className="text-base font-semibold text-[#FAFAFA] mb-5">Tone of Voice</h2>
+          <section className="bg-[#3D2B1F] border border-[#4A5568] rounded-2xl p-6">
+            <h2 className="text-base font-semibold text-[#FFF8F0] mb-5">Tone of Voice</h2>
             <div className="grid grid-cols-2 gap-4 mb-5">
               <div>
-                <p className="text-xs font-semibold text-[#A1A1AA] uppercase tracking-wider mb-2">Descriptors</p>
+                <p className="text-xs font-semibold text-[#FFE8D6] uppercase tracking-wider mb-2">Descriptors</p>
                 <div className="flex flex-wrap gap-1.5">
                   {kit.voice.descriptors.map((d) => (
-                    <span key={d} className="px-2.5 py-1 rounded-md bg-[#27272A] text-[#A1A1AA] text-xs border border-[#3F3F46]">{d}</span>
+                    <span key={d} className="px-2.5 py-1 rounded-md bg-[#4A5568] text-[#FFE8D6] text-xs border border-[#4A5568]">{d}</span>
                   ))}
                 </div>
               </div>
               <div>
-                <p className="text-xs font-semibold text-[#A1A1AA] uppercase tracking-wider mb-2">Avoid</p>
+                <p className="text-xs font-semibold text-[#FFE8D6] uppercase tracking-wider mb-2">Avoid</p>
                 <div className="flex flex-wrap gap-1.5">
                   {kit.voice.avoid.map((a) => (
-                    <span key={a} className="px-2.5 py-1 rounded-md bg-[#27272A] text-[#71717A] text-xs line-through">{a}</span>
+                    <span key={a} className="px-2.5 py-1 rounded-md bg-[#4A5568] text-[#A0644A] text-xs line-through">{a}</span>
                   ))}
                 </div>
               </div>
             </div>
             <div className="space-y-3">
               {kit.voice.examples.map((ex, i) => (
-                <div key={i} className="bg-[#27272A] rounded-xl p-4 space-y-2">
+                <div key={i} className="bg-[#4A5568] rounded-xl p-4 space-y-2">
                   <div className="flex items-start gap-2">
-                    <span className="text-[10px] text-[#34D399] font-bold mt-0.5 shrink-0">✓ GOOD</span>
-                    <p className="text-xs text-[#FAFAFA]">{ex.good}</p>
+                    <span className="text-[10px] text-[#38A169] font-bold mt-0.5 shrink-0">✓ GOOD</span>
+                    <p className="text-xs text-[#FFF8F0]">{ex.good}</p>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="text-[10px] text-[#F87171] font-bold mt-0.5 shrink-0">✗ AVOID</span>
-                    <p className="text-xs text-[#71717A] line-through">{ex.bad}</p>
+                    <span className="text-[10px] text-[#E53E3E] font-bold mt-0.5 shrink-0">✗ AVOID</span>
+                    <p className="text-xs text-[#A0644A] line-through">{ex.bad}</p>
                   </div>
                 </div>
               ))}
@@ -206,14 +206,14 @@ export function BrandKit() {
 
           {/* Reference Assets */}
           {refAssets.length > 0 && (
-            <section className="bg-[#18181B] border border-[#3F3F46] rounded-2xl p-6">
-              <h2 className="text-base font-semibold text-[#FAFAFA] mb-4">Reference Assets</h2>
+            <section className="bg-[#3D2B1F] border border-[#4A5568] rounded-2xl p-6">
+              <h2 className="text-base font-semibold text-[#FFF8F0] mb-4">Reference Assets</h2>
               <div className="flex gap-3 overflow-x-auto pb-1">
                 {refAssets.map((item) => (
-                  <div key={item.id} className="shrink-0 w-28 rounded-xl overflow-hidden border border-[#3F3F46]">
+                  <div key={item.id} className="shrink-0 w-28 rounded-xl overflow-hidden border border-[#4A5568]">
                     <img src={item.imageUrl} alt={item.title} className="w-full object-cover" style={{ height: 72 }} />
                     <div className="p-2">
-                      <p className="text-[10px] text-[#71717A] truncate">{item.title}</p>
+                      <p className="text-[10px] text-[#A0644A] truncate">{item.title}</p>
                     </div>
                   </div>
                 ))}
@@ -225,18 +225,18 @@ export function BrandKit() {
         {/* Export panel */}
         <div className="space-y-4 animate-fade-in-up stagger-3">
           <div className="flex items-center gap-2">
-            <h2 className="text-sm font-semibold text-[#A1A1AA] uppercase tracking-wider">Export Formats</h2>
+            <h2 className="text-sm font-semibold text-[#FFE8D6] uppercase tracking-wider">Export Formats</h2>
             {hasRealData && (
-              <span className="flex items-center gap-1 text-[9px] font-bold text-[#A78BFA] bg-[#A78BFA]/10 px-2 py-0.5 rounded-full border border-[#A78BFA]/20">
+              <span className="flex items-center gap-1 text-[9px] font-bold text-[#A0644A] bg-[#6B4226]/10 px-2 py-0.5 rounded-full border border-[#6B4226]/20">
                 <Sparkles size={9} /> AI-Generated
               </span>
             )}
           </div>
 
           {genError && (
-            <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-[#27272A] border border-[#3F3F46]">
-              <AlertCircle size={12} className="text-[#F59E0B] shrink-0" />
-              <p className="text-[10px] text-[#A1A1AA]">Generation failed — using template fallback</p>
+            <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-[#4A5568] border border-[#4A5568]">
+              <AlertCircle size={12} className="text-[#F4A832] shrink-0" />
+              <p className="text-[10px] text-[#FFE8D6]">Generation failed — using template fallback</p>
             </div>
           )}
 
@@ -250,32 +250,32 @@ export function BrandKit() {
                   key={fmt.id}
                   onClick={() => { setActiveFormat(fmt.id); setPreviewOpen(false); setGenError(false); }}
                   className={`rounded-xl p-4 cursor-pointer border transition-all ${
-                    isActive ? 'border-[#A78BFA]/50 bg-[#1F1A2E]' : 'bg-[#18181B] border-[#3F3F46] hover:border-[#52525B]'
+                    isActive ? 'border-[#6B4226]/50 bg-[#3D2B1F]' : 'bg-[#3D2B1F] border-[#4A5568] hover:border-[#6B4226]'
                   }`}
                 >
                   <div className="flex items-center gap-3 mb-2">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isActive ? 'bg-[#A78BFA]/20' : 'bg-[#27272A]'}`}>
-                      <Icon size={15} className={isActive ? 'text-[#A78BFA]' : 'text-[#71717A]'} />
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isActive ? 'bg-[#6B4226]/20' : 'bg-[#4A5568]'}`}>
+                      <Icon size={15} className={isActive ? 'text-[#A0644A]' : 'text-[#A0644A]'} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-[#FAFAFA] truncate">{fmt.name}</p>
-                      <span className="font-mono text-[10px] text-[#52525B]">{fmt.ext}</span>
+                      <p className="text-sm font-medium text-[#FFF8F0] truncate">{fmt.name}</p>
+                      <span className="font-mono text-[10px] text-[#A0644A]">{fmt.ext}</span>
                     </div>
                     {hasRealData && FORMAT_TO_API[fmt.id] && (
-                      <span className="text-[9px] font-bold text-[#A78BFA] bg-[#A78BFA]/10 px-1.5 py-0.5 rounded border border-[#A78BFA]/20">AI</span>
+                      <span className="text-[9px] font-bold text-[#A0644A] bg-[#6B4226]/10 px-1.5 py-0.5 rounded border border-[#6B4226]/20">AI</span>
                     )}
                   </div>
-                  <p className="text-xs text-[#71717A] leading-relaxed">{fmt.description}</p>
+                  <p className="text-xs text-[#A0644A] leading-relaxed">{fmt.description}</p>
 
                   {isActive && (
                     <div className="mt-3 flex gap-2">
                       <button
                         onClick={(e) => { e.stopPropagation(); handlePreview(fmt.id); }}
                         disabled={isLoading}
-                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[#27272A] text-xs text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors disabled:opacity-40"
+                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[#4A5568] text-xs text-[#FFE8D6] hover:text-[#FFF8F0] transition-colors disabled:opacity-40"
                       >
                         {isLoading ? (
-                          <><div className="w-3 h-3 rounded-full border border-[#52525B] border-t-[#A78BFA] animate-spin" />Generating...</>
+                          <><div className="w-3 h-3 rounded-full border border-[#6B4226] border-t-[#6B4226] animate-spin" />Generating...</>
                         ) : previewOpen ? (
                           <><EyeOff size={12} />Hide</>
                         ) : (
@@ -285,7 +285,7 @@ export function BrandKit() {
                       <button
                         onClick={(e) => { e.stopPropagation(); handleDownload(fmt.id); }}
                         disabled={isLoading}
-                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[#A78BFA] text-[#09090B] text-xs font-semibold hover:bg-[#C4B5FD] transition-colors btn-press disabled:opacity-40"
+                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[#6B4226] text-[#FFF8F0] text-xs font-semibold hover:bg-[#A0644A] transition-colors btn-press disabled:opacity-40"
                       >
                         <Download size={12} />
                         {isLoading ? 'Generating...' : downloaded === fmt.id ? 'Done!' : 'Download'}
@@ -298,18 +298,18 @@ export function BrandKit() {
           </div>
 
           {previewOpen && (
-            <div className="bg-[#0D0D0F] border border-[#3F3F46] rounded-xl overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#3F3F46]">
-                <span className="font-mono text-xs text-[#71717A]">preview</span>
+            <div className="bg-[#0D0D0F] border border-[#4A5568] rounded-xl overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#4A5568]">
+                <span className="font-mono text-xs text-[#A0644A]">preview</span>
                 <button
                   onClick={() => handleDownload(activeFormat)}
                   disabled={generating === activeFormat}
-                  className="text-xs text-[#A78BFA] hover:text-[#C4B5FD] transition-colors disabled:opacity-40"
+                  className="text-xs text-[#A0644A] hover:text-[#FFE8D6] transition-colors disabled:opacity-40"
                 >
                   Download
                 </button>
               </div>
-              <pre className="p-4 text-[10px] text-[#A1A1AA] font-mono overflow-auto max-h-72 leading-relaxed whitespace-pre-wrap break-all">
+              <pre className="p-4 text-[10px] text-[#FFE8D6] font-mono overflow-auto max-h-72 leading-relaxed whitespace-pre-wrap break-all">
                 {(generatedCache[activeFormat] ?? getExportPreview(activeFormat)).slice(0, 2500)}
               </pre>
             </div>

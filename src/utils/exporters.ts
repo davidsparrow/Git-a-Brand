@@ -60,12 +60,12 @@ Your aesthetic blends Swiss design precision with contemporary digital warmth. D
 
 ## Implementation Notes for AI Builders
 
-1. Default to dark backgrounds (\`#0A0A0F\` or \`#18181B\`)
-2. Use \`#A78BFA\` as primary accent — sparingly and purposefully
-3. Typography: Inter for UI, JetBrains Mono for code/technical
+1. Default to dark backgrounds (\`#050505\` or \`#3D2B1F\`)
+2. Use \`#6B4226\` as primary accent — sparingly and purposefully
+3. Typography: DM Sans for UI, JetBrains Mono for code/technical
 4. Minimum \`32px\` card padding, \`24px\` between elements
-5. Borders: \`1px solid #3F3F46\`
-6. Hover: scale \`1.02\`, border glow \`rgba(167,139,250,0.4)\`
+5. Borders: \`1px solid #4A5568\`
+6. Hover: scale \`1.02\`, border glow \`rgba(160,100,74,0.4)\`
 7. Voice: confident and clear, never corporate or buzzword-heavy
 `;
 }
@@ -104,30 +104,30 @@ Precision meets warmth. Dark interfaces, strategic color, generous whitespace.
 
 ## Color System
 \`\`\`
-Background:      #0A0A0F  (Void Black)
-Surface:         #18181B  (Deep Zinc)
-Elevated:        #27272A  (Elevated Zinc)
-Border:          #3F3F46  (Subtle Border)
-Accent:          #A78BFA  (Soft Violet)
-Accent Alt:      #5E6AD2  (Linear Blue)
-Success:         #34D399  (Emerald Glow)
-Text Primary:    #FAFAFA  (Clean White)
-Text Secondary:  #A1A1AA  (Zinc Gray)
+Background:      #050505  (Void Black)
+Surface:         #3D2B1F  (FiveUp Brown)
+Elevated:        #4A5568  (FiveUp Slate)
+Border:          #4A5568  (Slate Border)
+Accent:          #6B4226  (Warm Brown)
+Accent Alt:      #4A5568  (Slate Anchor)
+Success:         #38A169  (Emerald Glow)
+Text Primary:    #FFF8F0  (Clean White)
+Text Secondary:  #FFE8D6  (Warm Cream)
 \`\`\`
 
 ## Typography Rules
-- Headings: Inter Bold (700)
-- Body: Inter Regular (400)
+- Headings: DM Sans Bold (700)
+- Body: DM Sans Regular (400)
 - Code: JetBrains Mono Regular (400)
 - Scale: Major Third (1.250 ratio)
 - Max 3 font weights per composition
 
 ## Component Patterns
-- Cards: bg-[#18181B] border border-[#3F3F46] rounded-xl
-- Hover: scale(1.02) + border-[#A78BFA]/40 + shadow
-- CTAs: bg-[#A78BFA] text-[#0A0A0F] hover:bg-[#C4B5FD]
-- Input focus: border-[#A78BFA]/60
-- Badges: bg-[#27272A] text-[#A1A1AA] text-xs
+- Cards: bg-[#3D2B1F] border border-[#4A5568] rounded-xl
+- Hover: scale(1.02) + border-[#6B4226]/40 + shadow
+- CTAs: bg-[#6B4226] text-[#FFF8F0] hover:bg-[#A0644A]
+- Input focus: border-[#6B4226]/60
+- Badges: bg-[#4A5568] text-[#FFE8D6] text-xs
 
 ## Voice Rules
 - Tone: ${kit.voice.descriptors.join(', ')}

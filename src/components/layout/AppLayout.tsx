@@ -8,7 +8,7 @@ export function AppLayout() {
   const saveModalOpen = useUIStore((s) => s.saveModalOpen);
 
   return (
-    <div className="flex min-h-screen bg-[#09090B]">
+    <div className="flex min-h-screen bg-[#050505]">
       <Sidebar />
       <div className="flex flex-col flex-1 min-w-0">
         <Topbar />
