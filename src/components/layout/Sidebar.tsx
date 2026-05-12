@@ -17,16 +17,16 @@ export function Sidebar() {
 
   return (
     <aside
-      className="flex flex-col h-screen sticky top-0 shrink-0 border-r border-[#3F3F46] glass z-20 transition-all duration-300 ease-in-out"
+      className="flex flex-col h-screen sticky top-0 shrink-0 border-r border-[#4A5568] glass z-20 transition-all duration-300 ease-in-out"
       style={{ width: collapsed ? 64 : 240 }}
     >
       {/* Logo */}
-      <div className="flex items-center gap-3 px-4 py-5 border-b border-[#3F3F46]">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#A78BFA] to-[#5E6AD2] flex items-center justify-center shrink-0">
-          <Zap size={14} className="text-white" />
+      <div className="flex items-center gap-3 px-4 py-5 border-b border-[#4A5568]">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6B4226] to-[#4A5568] flex items-center justify-center shrink-0">
+          <Zap size={14} className="text-[#FFF8F0]" />
         </div>
         {!collapsed && (
-          <span className="font-bold text-[#FAFAFA] text-[15px] tracking-tight whitespace-nowrap overflow-hidden">
+          <span className="font-bold text-[#FFF8F0] text-[15px] tracking-tight whitespace-nowrap overflow-hidden">
             GitABrand
           </span>
         )}
@@ -37,14 +37,14 @@ export function Sidebar() {
         {collapsed ? (
           <button
             onClick={() => setSaveModal(true)}
-            className="w-full flex items-center justify-center p-2.5 rounded-lg bg-[#A78BFA] text-[#09090B] hover:bg-[#C4B5FD] transition-colors btn-press"
+            className="w-full h-8 flex items-center justify-center rounded-lg bg-[#6B4226] text-[#FFF8F0] hover:bg-[#A0644A] transition-colors btn-press"
           >
             <Plus size={16} />
           </button>
         ) : (
           <button
             onClick={() => setSaveModal(true)}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg bg-[#A78BFA] text-[#09090B] font-semibold text-sm hover:bg-[#C4B5FD] transition-colors btn-press"
+            className="w-full h-8 flex items-center justify-center gap-2 px-3 rounded-lg bg-[#6B4226] text-[#FFF8F0] font-semibold text-sm hover:bg-[#A0644A] transition-colors btn-press"
           >
             <Plus size={15} />
             Save New
@@ -62,15 +62,15 @@ export function Sidebar() {
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all relative group ${
                 isActive
-                  ? 'text-[#FAFAFA] bg-[#27272A]'
-                  : 'text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#1F1F22]'
+                  ? 'text-[#FFF8F0] bg-[#4A5568]'
+                  : 'text-[#FFE8D6] hover:text-[#FFF8F0] hover:bg-[#3D2B1F]'
               }`
             }
           >
             {({ isActive }) => (
               <>
                 {isActive && (
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-[#A78BFA] rounded-r-full" />
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-[#6B4226] rounded-r-full" />
                 )}
                 <Icon size={17} className="shrink-0" />
                 {!collapsed && <span className="truncate font-medium whitespace-nowrap">{label}</span>}
@@ -81,10 +81,10 @@ export function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-[#3F3F46] p-3 space-y-1.5">
+      <div className="border-t border-[#4A5568] p-3 space-y-1.5">
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs text-[#52525B] hover:text-[#A1A1AA] hover:bg-[#1F1F22] transition-colors"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs text-[#A0644A] hover:text-[#FFE8D6] hover:bg-[#3D2B1F] transition-colors"
           title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {collapsed
