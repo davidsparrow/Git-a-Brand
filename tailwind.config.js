@@ -4,16 +4,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: '#09090B',
-        surface: '#18181B',
-        elevated: '#27272A',
-        border: '#3F3F46',
-        accent: '#A78BFA',
-        'accent-hover': '#C4B5FD',
-        success: '#34D399',
+        bg: '#050505',
+        surface: '#3D2B1F',
+        elevated: '#4A5568',
+        border: '#4A5568',
+        accent: '#6B4226',
+        'accent-hover': '#A0644A',
+        success: '#38A169',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        sans: ['DM Sans', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
     },

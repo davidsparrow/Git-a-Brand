@@ -20,7 +20,7 @@ function GridCard({ item }: { item: Inspiration }) {
   return (
     <div
       onClick={() => navigate(`/swipe-file/${item.id}`)}
-      className="masonry-item insp-card bg-[#18181B] border border-[#3F3F46] rounded-xl overflow-hidden cursor-pointer card-hover relative"
+      className="masonry-item insp-card bg-[#3D2B1F] border border-[#4A5568] rounded-xl overflow-hidden cursor-pointer card-hover relative"
     >
       <div className="img-wrap overflow-hidden">
         <img src={item.imageUrl} alt={item.title} className="w-full object-cover" loading="lazy" />
@@ -29,19 +29,19 @@ function GridCard({ item }: { item: Inspiration }) {
       <div className="overlay absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-between p-3 pointer-events-none">
         <button
           onClick={(e) => { e.stopPropagation(); window.open(item.sourceUrl, '_blank'); }}
-          className="self-end bg-[#A78BFA] text-[#09090B] text-xs font-semibold px-2.5 py-1.5 rounded-md flex items-center gap-1 hover:bg-[#C4B5FD] transition-colors pointer-events-auto"
+          className="self-end bg-[#6B4226] text-[#FFF8F0] text-xs font-semibold px-2.5 py-1.5 rounded-md flex items-center gap-1 hover:bg-[#A0644A] transition-colors pointer-events-auto"
         >
           View <ExternalLink size={10} />
         </button>
         <div>
-          <p className="text-xs font-medium text-white">{item.title}</p>
-          <p className="text-[10px] text-white/60 mt-0.5">{item.sourceDomain}</p>
+          <p className="text-xs font-medium text-[#FFF8F0]">{item.title}</p>
+          <p className="text-[10px] text-[#FFF8F0]/60 mt-0.5">{item.sourceDomain}</p>
         </div>
       </div>
       <div className="p-3">
         <div className="flex flex-wrap gap-1">
           {item.tags.slice(0, 3).map((t) => (
-            <span key={t} className="px-2 py-0.5 rounded-md bg-[#27272A] text-[#71717A] text-[10px]">{t}</span>
+            <span key={t} className="px-2 py-0.5 rounded-md bg-[#4A5568] text-[#A0644A] text-[10px]">{t}</span>
           ))}
         </div>
       </div>
@@ -54,24 +54,24 @@ function ListCard({ item }: { item: Inspiration }) {
   return (
     <div
       onClick={() => navigate(`/swipe-file/${item.id}`)}
-      className="flex gap-4 bg-[#18181B] border border-[#3F3F46] rounded-xl p-4 cursor-pointer card-hover items-center"
+      className="flex gap-4 bg-[#3D2B1F] border border-[#4A5568] rounded-xl p-4 cursor-pointer card-hover items-center"
     >
       <img src={item.imageUrl} alt={item.title} className="w-16 h-12 object-cover rounded-lg shrink-0" loading="lazy" />
       <div className="flex-1 min-w-0">
-        <h3 className="text-sm font-medium text-[#FAFAFA] truncate">{item.title}</h3>
-        <p className="text-xs text-[#71717A]">{item.sourceDomain}</p>
+        <h3 className="text-sm font-medium text-[#FFF8F0] truncate">{item.title}</h3>
+        <p className="text-xs text-[#A0644A]">{item.sourceDomain}</p>
       </div>
       <div className="flex gap-1.5 shrink-0">
         {item.tags.slice(0, 3).map((t) => (
-          <span key={t} className="px-2 py-0.5 rounded-md bg-[#27272A] text-[#71717A] text-[10px]">{t}</span>
+          <span key={t} className="px-2 py-0.5 rounded-md bg-[#4A5568] text-[#A0644A] text-[10px]">{t}</span>
         ))}
       </div>
       <div className="flex gap-1.5 shrink-0 ml-2">
         {item.analysis.dominantColors.slice(0, 3).map((c) => (
-          <div key={c.hex} className="w-4 h-4 rounded border border-[#3F3F46]" style={{ background: c.hex }} />
+          <div key={c.hex} className="w-4 h-4 rounded border border-[#4A5568]" style={{ background: c.hex }} />
         ))}
       </div>
-      <span className="text-xs text-[#52525B] shrink-0 ml-2 whitespace-nowrap">
+      <span className="text-xs text-[#A0644A] shrink-0 ml-2 whitespace-nowrap">
         {new Date(item.savedAt).toLocaleDateString()}
       </span>
     </div>
@@ -105,10 +105,10 @@ export function SwipeFile() {
       {/* Header */}
       <div className="flex items-start justify-between mb-6 animate-fade-in-up stagger-1">
         <div>
-          <h1 className="text-2xl font-bold text-[#FAFAFA] tracking-tight">Swipe File</h1>
-          <p className="text-sm text-[#71717A] mt-1">Your curated visual inspiration</p>
+          <h1 className="text-2xl font-bold text-[#FFF8F0] tracking-tight">Swipe File</h1>
+          <p className="text-sm text-[#A0644A] mt-1">Your curated visual inspiration</p>
         </div>
-        <span className="mt-1 px-2.5 py-1 rounded-full bg-[#27272A] text-[#A1A1AA] text-xs font-medium">
+        <span className="mt-1 px-2.5 py-1 rounded-full bg-[#4A5568] text-[#FFE8D6] text-xs font-medium">
           {filtered.length} items
         </span>
       </div>
@@ -121,7 +121,7 @@ export function SwipeFile() {
               key={tag}
               onClick={() => toggleTag(tag)}
               className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
-                selectedTags.includes(tag) ? 'tag-active' : 'border-[#3F3F46] text-[#71717A] hover:text-[#A1A1AA] hover:border-[#52525B]'
+                selectedTags.includes(tag) ? 'tag-active' : 'border-[#4A5568] text-[#A0644A] hover:text-[#FFE8D6] hover:border-[#6B4226]'
               }`}
             >
               {tag}
@@ -131,7 +131,7 @@ export function SwipeFile() {
         {selectedTags.length > 0 && (
           <button
             onClick={clearTags}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs text-[#71717A] hover:text-[#FAFAFA] border border-[#3F3F46] transition-colors"
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs text-[#A0644A] hover:text-[#FFF8F0] border border-[#4A5568] transition-colors"
           >
             <X size={11} /> Clear
           </button>
@@ -144,19 +144,19 @@ export function SwipeFile() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'date' | 'relevance' | 'color')}
-            className="appearance-none bg-[#18181B] border border-[#3F3F46] rounded-lg px-3 py-2 text-sm text-[#A1A1AA] pr-8 focus:border-[#A78BFA]/60 transition-colors cursor-pointer"
+            className="appearance-none bg-[#3D2B1F] border border-[#4A5568] rounded-lg px-3 py-2 text-sm text-[#FFE8D6] pr-8 focus:border-[#6B4226]/60 transition-colors cursor-pointer"
           >
             {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
-          <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#52525B] pointer-events-none" />
+          <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#A0644A] pointer-events-none" />
         </div>
 
-        <div className="ml-auto flex items-center gap-1 bg-[#18181B] border border-[#3F3F46] rounded-lg p-1">
+        <div className="ml-auto flex items-center gap-1 bg-[#3D2B1F] border border-[#4A5568] rounded-lg p-1">
           {(['grid', 'list'] as const).map((m) => (
             <button
               key={m}
               onClick={() => setViewMode(m)}
-              className={`p-2 rounded-md transition-colors ${viewMode === m ? 'bg-[#27272A] text-[#FAFAFA]' : 'text-[#52525B] hover:text-[#A1A1AA]'}`}
+              className={`p-2 rounded-md transition-colors ${viewMode === m ? 'bg-[#4A5568] text-[#FFF8F0]' : 'text-[#A0644A] hover:text-[#FFE8D6]'}`}
             >
               {m === 'grid' ? <Grid3X3 size={15} /> : <List size={15} />}
             </button>
@@ -168,19 +168,19 @@ export function SwipeFile() {
       {loading ? (
         <div className="grid grid-cols-4 gap-4 animate-pulse">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="bg-[#18181B] border border-[#3F3F46] rounded-xl overflow-hidden">
-              <div className="h-40 bg-[#27272A]" />
+            <div key={i} className="bg-[#3D2B1F] border border-[#4A5568] rounded-xl overflow-hidden">
+              <div className="h-40 bg-[#4A5568]" />
               <div className="p-3 space-y-2">
-                <div className="h-2.5 bg-[#27272A] rounded w-3/4" />
-                <div className="h-2 bg-[#27272A] rounded w-1/2" />
+                <div className="h-2.5 bg-[#4A5568] rounded w-3/4" />
+                <div className="h-2 bg-[#4A5568] rounded w-1/2" />
               </div>
             </div>
           ))}
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-20">
-          <p className="text-[#52525B] text-sm">No items match your filters</p>
-          <button onClick={clearTags} className="mt-3 text-xs text-[#A78BFA] hover:text-[#C4B5FD] transition-colors">
+          <p className="text-[#A0644A] text-sm">No items match your filters</p>
+          <button onClick={clearTags} className="mt-3 text-xs text-[#A0644A] hover:text-[#FFE8D6] transition-colors">
             Clear filters
           </button>
         </div>
